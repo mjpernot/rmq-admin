@@ -17,6 +17,7 @@ pipeline {
                 pip2 install mock==2.0.0 --user
                 pip2 install requests==2.22.0 --user
                 ./test/unit/rmq_admin/create_base.py
+                ./test/unit/rmq_admin/fill_body.py
                 ./test/unit/rmq_admin/help_message.py
                 ./test/unit/rmq_admin/main.py
                 ./test/unit/rmq_admin/print_list.py
