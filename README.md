@@ -77,6 +77,10 @@ Make the appropriate changes to the RabbitMQ environment.
     - user = "USER"
     - passwd = "PASSWORD"
     - host = "HOSTNAME"
+  * Only change these if you know what you are doing.
+  * Managment port is m_port and Listening port is q_port.
+    - m_port = 15672
+    - q_port = 5672
 
 ```
 vim rabbitmq.py
