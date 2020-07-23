@@ -8,6 +8,7 @@ coverage erase
 
 echo ""
 echo "Running unit test modules in conjunction with coverage"
+coverage run -a --source=rmq_admin test/unit/rmq_admin/create_base.py
 coverage run -a --source=rmq_admin test/unit/rmq_admin/help_message.py 
 
 echo ""
