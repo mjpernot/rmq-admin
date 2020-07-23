@@ -6,4 +6,4 @@
 coverage.xml
 config/*.py
 lib
-rabbit_lib
+test/unit/rmq_admin/tmp/*.txt
