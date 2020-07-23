@@ -1,0 +1,9 @@
+*.pyc
+.coverage
+*.swp
+*.HOLD
+./*.sh
+coverage.xml
+config/*.py
+lib
+rabbit_lib
