@@ -7,3 +7,4 @@ coverage.xml
 config/*.py
 lib
 test/unit/rmq_admin/tmp/*.txt
+test/integration/rmq_admin/config/rabbitmq.py
