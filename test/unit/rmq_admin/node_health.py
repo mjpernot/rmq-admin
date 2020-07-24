@@ -184,6 +184,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_no_err_verb_all -> Test with no errors detected - all - verbose.
+        test_no_err_all -> Test with no errors detected - all outputs.
+        test_no_err_verb_std_file -> Test no erro to std out & file - verbose.
+        test_no_err_std_file -> Test with no errors to standard out and file.
         test_no_err_verb_file_mail -> Test no errors: file & mail: verbose.
         test_no_err_file_mail -> Test with no errors detected - file and mail.
         test_no_err_verb_std_mail -> Test no erro to std out & mail - verbose.
@@ -242,6 +246,10 @@ class UnitTest(unittest.TestCase):
         self.args_array13 = {"-t": "toaddr", "-o": self.file, "-z": True}
         self.args_array14 = {"-t": "toaddr", "-o": self.file, "-w": True,
                              "-z": True}
+        self.args_array15 = {"-o": self.file}
+        self.args_array16 = {"-o": self.file, "-w": True}
+        self.args_array17 = {"-t": "toaddr", "-o": self.file}
+        self.args_array18 = {"-t": "toaddr", "-o": self.file, "-w": True}
         self.date = "2020-07-24"
         self.time = "10:20:10"
         self.header = "Node Health Check"
@@ -254,6 +262,89 @@ class UnitTest(unittest.TestCase):
         self.results2 = self.header + self.subhdr + self.entry
         self.results3 = \
             self.header + self.subhdr + self.entry2 + self.entry3 + self.entry4
+
+    @mock.patch("rmq_admin.gen_class.setup_mail")
+    @mock.patch("rmq_admin.gen_libs")
+    @mock.patch("rmq_admin.requests.get")
+    def test_no_err_verb_all(self, mock_get, mock_lib, mock_mail):
+
+        """Function:  test_no_err_verb_all
+
+        Description:  Test with no errors detected - all - verbose.
+
+        Arguments:
+
+        """
+
+        mock_get.return_value = self.get
+        mock_lib.get_date.return_value = self.date
+        mock_lib.get_time.return_value = self.time
+        mock_mail.return_value = self.mail
+
+        with gen_libs.no_std_out():
+            rmq_admin.node_health(self.base_url, self.cfg, self.args_array18)
+
+        self.assertEqual(sum(1 for line in open(self.file)), 3)
+        self.assertEqual(self.mail.msg, self.results2)
+
+    @mock.patch("rmq_admin.gen_class.setup_mail")
+    @mock.patch("rmq_admin.gen_libs")
+    @mock.patch("rmq_admin.requests.get")
+    def test_no_err_all(self, mock_get, mock_lib, mock_mail):
+
+        """Function:  test_no_err_all
+
+        Description:  Test with no errors detected - all outputs.
+
+        Arguments:
+
+        """
+
+        mock_get.return_value = self.get
+        mock_lib.get_date.return_value = self.date
+        mock_lib.get_time.return_value = self.time
+        mock_mail.return_value = self.mail
+
+        rmq_admin.node_health(self.base_url, self.cfg, self.args_array17)
+
+        self.assertFalse(os.path.isfile(self.file))
+        self.assertEqual(self.mail.msg, self.results)
+
+    @mock.patch("rmq_admin.requests.get")
+    def test_no_err_verb_std_file(self, mock_get):
+
+        """Function:  test_no_err_verb_std_file
+
+        Description:  Test no erro to std out & file - verbose.
+
+        Arguments:
+
+        """
+
+        mock_get.return_value = self.get
+
+        with gen_libs.no_std_out():
+            self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
+                                                   self.args_array16))
+
+        self.assertEqual(sum(1 for line in open(self.file)), 3)
+
+    @mock.patch("rmq_admin.requests.get")
+    def test_no_err_std_file(self, mock_get):
+
+        """Function:  test_no_err_std_file
+
+        Description:  Test with no errors to standard out and file.
+
+        Arguments:
+
+        """
+
+        mock_get.return_value = self.get
+
+        self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
+                                               self.args_array15))
+        self.assertFalse(os.path.isfile(self.file))
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
