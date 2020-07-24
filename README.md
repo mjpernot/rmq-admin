@@ -14,10 +14,11 @@
  * Program Help Function
  * Testing
    - Unit
+   - Integration
 
 
 # Features:
- * 
+ * RabbitMQ Node health check.
  * 
  * 
 
@@ -141,5 +142,70 @@ test/unit/rmq_admin/unit_test_run.sh
 ```
 cd {Python_Project}/rmq-admin
 test/unit/rmq_admin/code_coverage.sh
+```
+
+# Integration Testing:
+
+### Installation:
+
+Install the project using git.
+  * Replace **{Python_Project}** with the baseline path of the python program.
+  * Replace **{Branch_Name}** with the name of the Git branch being tested.  See Git Merge Request.
+
+```
+umask 022
+cd {Python_Project}
+git clone --branch {Branch_Name} git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/rmq-admin.git
+```
+
+Install/upgrade system modules.
+
+```
+cd rmq-admin
+sudo bash
+umask 022
+pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
+exit
+```
+
+Install supporting classes and libraries.
+
+```
+pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
+```
+
+# Configuration:
+  * Please note that the integration testing will require access to a rabbitmq system to run the tests.
+
+Create RabbitMQ configuration file.
+
+```
+cd test/integration/rmq_admin/config
+cp ../../../../config/rabbitmq.py.TEMPLATE rabbitmq.py
+```
+
+Make the appropriate changes to the RabbitMQ environment.
+  * Change these entries in the rabbitmq.py file.  The "user", "passwd", and "host" variables are the connection information to a RabbitMQ node.
+    - user = "USER"
+    - passwd = "PASSWORD"
+    - host = "HOSTNAME"
+
+```
+vim rabbitmq.py
+chmod 600 rabbitmq.py
+```
+
+### Testing:
+  * Replace **{Python_Project}** with the baseline path of the python program.
+
+```
+cd {Python_Project}/rmq-admin
+test/integration/rmq_admin/integration_test_run.sh
+```
+
+### Code coverage:
+```
+cd {Python_Project}/rmq-admin
+test/integration/rmq_admin/code_coverage.sh
 ```
 
