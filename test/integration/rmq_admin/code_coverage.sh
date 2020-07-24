@@ -9,6 +9,7 @@ coverage erase
 echo ""
 echo "Running integration test modules in conjunction with coverage"
 coverage run -a --source=rmq_admin test/integration/rmq_admin/fill_body.py
+coverage run -a --source=rmq_admin test/integration/rmq_admin/node_health.py
 
 echo ""
 echo "Producing code coverage report"
