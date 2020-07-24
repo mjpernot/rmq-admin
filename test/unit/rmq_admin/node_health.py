@@ -233,7 +233,6 @@ class UnitTest(unittest.TestCase):
                             "-z": True}
         self.args_array9 = {"-t": "toaddr", "-z": True}
         self.args_array10 = {"-t": "toaddr", "-w": True, "-z": True}
-        #self.args_array7 = {"-t": "toaddr", "-s": ["subj", "line"], "-z": True}
         self.date = "2020-07-24"
         self.time = "10:20:10"
         self.header = "Node Health Check"
