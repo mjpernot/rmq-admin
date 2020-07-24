@@ -44,6 +44,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_verb_std_file_mail -> Test with std out, file and mail - verbose.
+        test_verb_std_file -> Test with strandard out and file - verbose.
+        test_verb_mail_file -> Test with mail and file - verbose.
+        test_verb_std_mail -> Test with standard out and mail - verbose.
         test_no_err_verb_mail -> Test with no error for mail - verbose.
         test_no_err_mail -> Test with no error for mail.
         test_append_verb_file -> Test with append file and verbose.
@@ -73,14 +77,80 @@ class UnitTest(unittest.TestCase):
         self.base_url2 = \
             "http://" + self.cfg2.host + ":" + str(self.cfg2.m_port) + "/api/"
         self.args_array = {}
+        self.args_array2 = {"-t": "toaddr", "-w": True}
         self.args_array3 = {"-w": True}
         self.args_array4 = {"-w": True, "-z": True}
         self.args_array5 = {"-o": self.file, "-z": True}
         self.args_array6 = {"-o": self.file, "-w": True, "-z": True}
+        self.args_array7 = {"-o": self.file, "-t": "toaddr", "-w": True,
+                            "-z": True}
         self.args_array8 = {"-o": self.file, "-a": True, "-w": True,
                             "-z": True}
         self.args_array9 = {"-t": "toaddr", "-z": True}
         self.args_array10 = {"-t": "toaddr", "-w": True, "-z": True}
+        self.args_array11 = {"-o": self.file, "-w": True}
+        self.args_array12 = {"-t": "toaddr", "-o": self.file, "-w": True}
+
+    @mock.patch("rmq_admin.gen_class.Mail.send_mail",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_admin.print_list", mock.Mock(return_value=True))
+    def test_verb_std_file_mail(self):
+
+        """Function:  test_verb_std_file_mail
+
+        Description:  Test with std out, file and mail - verbose.
+
+        Arguments:
+
+        """
+
+        self.assertFalse(rmq_admin.node_health(self.base_url2, self.cfg2,
+                                               self.args_array12))
+
+    @mock.patch("rmq_admin.print_list", mock.Mock(return_value=True))
+    def test_verb_std_file(self):
+
+        """Function:  test_verb_std_file
+
+        Description:  Test with strandard out and file - verbose.
+
+        Arguments:
+
+        """
+
+        self.assertFalse(rmq_admin.node_health(self.base_url2, self.cfg2,
+                                               self.args_array11))
+
+    @mock.patch("rmq_admin.gen_class.Mail.send_mail",
+                mock.Mock(return_value=True))
+    def test_verb_mail_file(self):
+
+        """Function:  test_verb_mail_file
+
+        Description:  Test with no error for mail - verbose.
+
+        Arguments:
+
+        """
+
+        self.assertFalse(rmq_admin.node_health(self.base_url2, self.cfg2,
+                                               self.args_array7))
+
+    @mock.patch("rmq_admin.gen_class.Mail.send_mail",
+                mock.Mock(return_value=True))
+    @mock.patch("rmq_admin.print_list", mock.Mock(return_value=True))
+    def test_verb_std_mail(self):
+
+        """Function:  test_verb_std_mail
+
+        Description:  Test with standard out and mail - verbose.
+
+        Arguments:
+
+        """
+
+        self.assertFalse(rmq_admin.node_health(self.base_url2, self.cfg2,
+                                               self.args_array2))
 
     @mock.patch("rmq_admin.gen_class.Mail.send_mail",
                 mock.Mock(return_value=True))
