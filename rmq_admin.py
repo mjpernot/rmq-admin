@@ -203,7 +203,7 @@ def node_health(base_url, cfg, args_array, **kwargs):
             fill_body(mail, results)
             mail.send_mail()
 
-    if ofile:
+    if ofile and (data["status"] != "ok" or verbose):
         print_list(results, mode=mode, ofile=ofile)
 
 
