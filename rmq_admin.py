@@ -198,10 +198,9 @@ def node_health(base_url, cfg, args_array, **kwargs):
     elif verbose and not no_std:
         print_list(results)
 
-    if mail:
-        if data["status"] != "ok" or verbose:
-            fill_body(mail, results)
-            mail.send_mail()
+    if mail and (data["status"] != "ok" or verbose):
+        fill_body(mail, results)
+        mail.send_mail()
 
     if ofile and (data["status"] != "ok" or verbose):
         print_list(results, mode=mode, ofile=ofile)
