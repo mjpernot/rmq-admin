@@ -280,8 +280,8 @@ def main(**kwargs):
             del prog_lock
 
         except gen_class.SingleInstanceException:
-            log.log_warn("rmq_admin lock in place for: %s"
-                         % (args_array.get("-y", "")))
+            print("rmq_admin lock in place for: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":
