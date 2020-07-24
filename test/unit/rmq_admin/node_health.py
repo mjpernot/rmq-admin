@@ -184,6 +184,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_no_err_verb_file_mail -> Test no errors: file & mail: verbose.
+        test_no_err_file_mail -> Test with no errors detected - file and mail.
+        test_no_err_verb_std_mail -> Test no erro to std out & mail - verbose.
+        test_no_err_std_mail -> Test with no errors to standard out and mail.
         test_err_verb_mail -> Test with error for mail - verbose.
         test_err_mail -> Test with error for mail.
         test_no_err_verb_mail -> Test with no error for mail - verbose.
@@ -233,6 +237,11 @@ class UnitTest(unittest.TestCase):
                             "-z": True}
         self.args_array9 = {"-t": "toaddr", "-z": True}
         self.args_array10 = {"-t": "toaddr", "-w": True, "-z": True}
+        self.args_array11 = {"-t": "toaddr"}
+        self.args_array12 = {"-t": "toaddr", "-w": True}
+        self.args_array13 = {"-t": "toaddr", "-o": self.file, "-z": True}
+        self.args_array14 = {"-t": "toaddr", "-o": self.file, "-w": True,
+                             "-z": True}
         self.date = "2020-07-24"
         self.time = "10:20:10"
         self.header = "Node Health Check"
@@ -245,6 +254,98 @@ class UnitTest(unittest.TestCase):
         self.results2 = self.header + self.subhdr + self.entry
         self.results3 = \
             self.header + self.subhdr + self.entry2 + self.entry3 + self.entry4
+
+    @mock.patch("rmq_admin.gen_class.setup_mail")
+    @mock.patch("rmq_admin.gen_libs")
+    @mock.patch("rmq_admin.requests.get")
+    def test_no_err_verb_file_mail(self, mock_get, mock_lib, mock_mail):
+
+        """Function:  test_no_err_verb_file_mail
+
+        Description:  Test with no errors detected - file and mail - verbose.
+
+        Arguments:
+
+        """
+
+        mock_get.return_value = self.get
+        mock_lib.get_date.return_value = self.date
+        mock_lib.get_time.return_value = self.time
+        mock_mail.return_value = self.mail
+
+        rmq_admin.node_health(self.base_url, self.cfg, self.args_array14)
+
+        self.assertEqual(sum(1 for line in open(self.file)), 3)
+        self.assertEqual(self.mail.msg, self.results2)
+
+    @mock.patch("rmq_admin.gen_class.setup_mail")
+    @mock.patch("rmq_admin.gen_libs")
+    @mock.patch("rmq_admin.requests.get")
+    def test_no_err_file_mail(self, mock_get, mock_lib, mock_mail):
+
+        """Function:  test_no_err_file_mail
+
+        Description:  Test with no errors detected - file and mail.
+
+        Arguments:
+
+        """
+
+        mock_get.return_value = self.get
+        mock_lib.get_date.return_value = self.date
+        mock_lib.get_time.return_value = self.time
+        mock_mail.return_value = self.mail
+
+        rmq_admin.node_health(self.base_url, self.cfg, self.args_array13)
+
+        self.assertFalse(os.path.isfile(self.file))
+        self.assertEqual(self.mail.msg, self.results)
+
+    @mock.patch("rmq_admin.gen_class.setup_mail")
+    @mock.patch("rmq_admin.gen_libs")
+    @mock.patch("rmq_admin.requests.get")
+    def test_no_err_verb_std_mail(self, mock_get, mock_lib, mock_mail):
+
+        """Function:  test_no_errors_verbose
+
+        Description:  Test no erro to std out & mail - verbose.
+
+        Arguments:
+
+        """
+
+        mock_get.return_value = self.get
+        mock_lib.get_date.return_value = self.date
+        mock_lib.get_time.return_value = self.time
+        mock_mail.return_value = self.mail
+
+        with gen_libs.no_std_out():
+            self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
+                                                   self.args_array12))
+
+        self.assertEqual(self.mail.msg, self.results2)
+
+    @mock.patch("rmq_admin.gen_class.setup_mail")
+    @mock.patch("rmq_admin.gen_libs")
+    @mock.patch("rmq_admin.requests.get")
+    def test_no_err_std_mail(self, mock_get, mock_lib, mock_mail):
+
+        """Function:  test_no_err_std_mail
+
+        Description:  Test with no errors to standard out and mail.
+
+        Arguments:
+
+        """
+
+        mock_get.return_value = self.get
+        mock_lib.get_date.return_value = self.date
+        mock_lib.get_time.return_value = self.time
+        mock_mail.return_value = self.mail
+
+        self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
+                                               self.args_array11))
+        self.assertEqual(self.mail.msg, self.results)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
