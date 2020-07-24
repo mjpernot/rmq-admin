@@ -6,4 +6,5 @@
 
 echo ""
 echo "Integration test:  rmq_admin.py"
+test/integration/rmq_admin/fill_body.py
 
