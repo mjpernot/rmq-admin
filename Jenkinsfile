@@ -20,6 +20,7 @@ pipeline {
                 ./test/unit/rmq_admin/fill_body.py
                 ./test/unit/rmq_admin/help_message.py
                 ./test/unit/rmq_admin/main.py
+                ./test/unit/rmq_admin/node_health.py
                 ./test/unit/rmq_admin/print_list.py
                 deactivate
                 rm -rf test_env
