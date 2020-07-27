@@ -119,10 +119,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.line = "First line of data"
         self.mail = MailTest("toaddr")
-        self.data = ["First line of data"]
-        self.data2 = ["First line of data", "Second line of data"]
-        self.results = "First line of data"
+        self.data = [self.line]
+        self.data2 = [self.line, "Second line of data"]
+        self.results = self.line
         self.results2 = "First line of dataSecond line of data"
 
     def test_multiple_lines(self):
