@@ -5,5 +5,5 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.0.1] - 2020-07-22
-- Initial development.
+- Initial development with node health check.
 
