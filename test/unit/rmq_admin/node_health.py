@@ -76,14 +76,14 @@ class MailTest(object):
 
     """
 
-    def __init__(self, to, subj=None, frm=None, msg_type=None):
+    def __init__(self, toline, subj=None, frm=None, msg_type=None):
 
         """Method:  __init__
 
         Description:  Initialization of an instance of the Mail class.
 
         Arguments:
-            (input) to -> To email address.
+            (input) toline -> To email address.
             (input) subj -> Subject line of mail.
             (input) msg_type -> Type of email being sent.
             (input) frm -> From email address.
@@ -95,11 +95,11 @@ class MailTest(object):
         if isinstance(subj, list):
             subj = list(subj)
 
-        if isinstance(to, list):
-            self.to = list(to)
+        if isinstance(toline, list):
+            self.toline = list(toline)
 
         else:
-            self.to = to
+            self.toline = toline
 
         self.subj = subj
         self.frm = frm
