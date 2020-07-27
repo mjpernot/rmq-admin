@@ -97,7 +97,9 @@ def create_base(cfg, **kwargs):
 
     """
 
-    return "http://" + cfg.host + ":" + str(cfg.m_port) + "/api/"
+    http = "http"
+
+    return http + "://" + cfg.host + ":" + str(cfg.m_port) + "/api/"
 
 
 #Move this to python-libs.gen_libs module.
