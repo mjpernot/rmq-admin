@@ -192,10 +192,7 @@ def node_health(base_url, cfg, args_array, **kwargs):
     else:
         results.append(("\tStatus: %s" % (data["status"])).expandtabs(TAB_LEN))
 
-    if data["status"] != "ok" and not no_std:
-        print_list(results)
-
-    elif verbose and not no_std:
+    if (data["status"] != "ok" and not no_std) or (verbose and not no_std):
         print_list(results)
 
     if mail and (data["status"] != "ok" or verbose):
