@@ -34,6 +34,21 @@ import version
 __version__ = version.__version__
 
 
+def linecnt(fname):
+
+    """Function:  linecnt
+
+    Description:  Count number of lines in a file.
+
+    Arguments:
+        (input) fname -> File name.
+        (output) Number of lines in the file.
+
+    """
+
+    return sum(1 for line in open(fname))
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -81,7 +96,7 @@ class UnitTest(unittest.TestCase):
         rmq_admin.print_list(self.data2, ofile=self.file, mode=self.mode)
         rmq_admin.print_list(self.data2, ofile=self.file, mode=self.mode)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 4)
+        self.assertEqual(linecnt(self.file), 4)
 
     def test_mode_w_passed(self):
 
@@ -96,7 +111,7 @@ class UnitTest(unittest.TestCase):
         rmq_admin.print_list(self.data2, ofile=self.file, mode=self.mode2)
         rmq_admin.print_list(self.data2, ofile=self.file, mode=self.mode2)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 2)
+        self.assertEqual(linecnt(self.file), 2)
 
     def test_mode_w_default(self):
 
@@ -111,7 +126,7 @@ class UnitTest(unittest.TestCase):
         rmq_admin.print_list(self.data2, ofile=self.file)
         rmq_admin.print_list(self.data2, ofile=self.file)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 2)
+        self.assertEqual(linecnt(self.file), 2)
 
     def test_write_file2(self):
 
@@ -125,7 +140,7 @@ class UnitTest(unittest.TestCase):
 
         rmq_admin.print_list(self.data2, ofile=self.file)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 2)
+        self.assertEqual(linecnt(self.file), 2)
 
     def test_write_file(self):
 
