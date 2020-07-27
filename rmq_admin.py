@@ -102,7 +102,6 @@ def create_base(cfg, **kwargs):
     return http + "://" + cfg.host + ":" + str(cfg.m_port) + "/api/"
 
 
-#Move this to python-libs.gen_libs module.
 def print_list(data, **kwargs):
 
     """Function:  print_list
