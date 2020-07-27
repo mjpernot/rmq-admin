@@ -36,6 +36,21 @@ import version
 __version__ = version.__version__
 
 
+def linecnt(fname):
+
+    """Function:  linecnt
+
+    Description:  Count number of lines in a file.
+
+    Arguments:
+        (input) fname -> File name.
+        (output) Number of lines in the file.
+
+    """
+
+    return sum(1 for line in open(fname))
+
+
 class CfgTest(object):
 
     """Class:  CfgTest
@@ -284,7 +299,7 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             rmq_admin.node_health(self.base_url, self.cfg, self.args_array18)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 3)
+        self.assertEqual(linecnt(self.file), 3)
         self.assertEqual(self.mail.msg, self.results2)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
@@ -327,7 +342,7 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
                                                    self.args_array16))
 
-        self.assertEqual(sum(1 for line in open(self.file)), 3)
+        self.assertEqual(linecnt(self.file), 3)
 
     @mock.patch("rmq_admin.requests.get")
     def test_no_err_std_file(self, mock_get):
@@ -366,7 +381,7 @@ class UnitTest(unittest.TestCase):
 
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array14)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 3)
+        self.assertEqual(linecnt(self.file), 3)
         self.assertEqual(self.mail.msg, self.results2)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
@@ -537,7 +552,7 @@ class UnitTest(unittest.TestCase):
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array8)
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array8)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 6)
+        self.assertEqual(linecnt(self.file), 6)
 
     @mock.patch("rmq_admin.requests.get")
     def test_append_file(self, mock_get):
@@ -555,7 +570,7 @@ class UnitTest(unittest.TestCase):
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array7)
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array7)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 10)
+        self.assertEqual(linecnt(self.file), 10)
 
     @mock.patch("rmq_admin.requests.get")
     def test_err_verb_file(self, mock_get):
@@ -572,7 +587,7 @@ class UnitTest(unittest.TestCase):
 
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array6)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 5)
+        self.assertEqual(linecnt(self.file), 5)
 
     @mock.patch("rmq_admin.requests.get")
     def test_err_file(self, mock_get):
@@ -589,7 +604,7 @@ class UnitTest(unittest.TestCase):
 
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array5)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 5)
+        self.assertEqual(linecnt(self.file), 5)
 
     @mock.patch("rmq_admin.requests.get")
     def test_no_err_verb_file(self, mock_get):
@@ -606,7 +621,7 @@ class UnitTest(unittest.TestCase):
 
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array6)
 
-        self.assertEqual(sum(1 for line in open(self.file)), 3)
+        self.assertEqual(linecnt(self.file), 3)
 
     @mock.patch("rmq_admin.requests.get")
     def test_no_err_file(self, mock_get):
