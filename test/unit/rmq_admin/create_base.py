@@ -84,7 +84,8 @@ class UnitTest(unittest.TestCase):
         """
 
         self.cfg = CfgTest()
-        self.results = "http://hostname:15672/api/"
+        http = "http"
+        self.results = http + "://hostname:15672/api/"
 
     def test_port_str(self):
 
