@@ -69,12 +69,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.http = "http"
         self.mod = "rabbitmq"
         self.dir = "test/integration/rmq_admin/config"
         self.file = "test/unit/rmq_admin/tmp/outfile.txt"
         self.cfg2 = gen_libs.load_module(self.mod, self.dir)
         self.base_url2 = \
-            "http://" + self.cfg2.host + ":" + str(self.cfg2.m_port) + "/api/"
+            self.http + "://" + self.cfg2.host + ":" + \
+            str(self.cfg2.m_port) + "/api/"
         self.args_array = {}
         self.args_array2 = {"-t": "toaddr", "-w": True}
         self.args_array3 = {"-w": True}
