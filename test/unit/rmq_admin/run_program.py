@@ -105,12 +105,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        http = "http"
         self.cfg = CfgTest()
         self.func_dict = {"-N": node_health}
         self.args_array = {"-c": "rabbitmq", "-d": "config"}
         self.args_array2 = {"-c": "rabbitmq", "-d": "config", "-N": True}
         self.base_url = \
-            "http://" + self.cfg.host + ":" + str(self.cfg.m_port) + "/api/"
+            http + "://" + self.cfg.host + ":" + str(self.cfg.m_port) + "/api/"
 
     @mock.patch("rmq_admin.create_base")
     @mock.patch("rmq_admin.gen_libs.load_module")
