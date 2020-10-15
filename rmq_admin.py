@@ -39,7 +39,7 @@
 
             # RabbitMQ Configuration file
             user = "USER"
-            passwd = "PASSWORD"
+            japd = "PASSWORD"
             host = "HOSTNAME"
             # RabbitMQ management port, default is 15672
             m_port = 15672
@@ -90,7 +90,7 @@ def create_base(cfg, **kwargs):
 
     """Function:  create_base
 
-    Description:  Create base url to connect ot RabbitMQ node.
+    Description:  Create base url to connect to RabbitMQ node.
 
     Arguments:
         (input) cfg -> Configuration module name.
@@ -173,7 +173,7 @@ def node_health(base_url, cfg, args_array, **kwargs):
     dtg = gen_libs.get_date() + " " + gen_libs.get_time()
     results.append(("\tAsOf: %s" % (dtg)).expandtabs(TAB_LEN))
     data = requests.get(base_url + "healthchecks/node",
-                        auth=(cfg.user, cfg.passwd)).json()
+                        auth=(cfg.user, cfg.japd)).json()
 
     if args_array.get("-a", False):
         mode = "a"
