@@ -11,20 +11,17 @@ pipeline {
                 dir ('lib') {
                     git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
-                dir ('rabbit_lib') {
-                    git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/rabbitmq-lib.git"
-                }
-                dir ('rabbit_lib/lib') {
-                    git branch: "master", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
-                }
                 sh """
                 virtualenv test_env
                 source test_env/bin/activate
                 pip2 install mock==2.0.0 --user
-                pip2 install pika==0.11.0 --user
                 pip2 install requests==2.22.0 --user
+                ./test/unit/rmq_admin/create_base.py
+                ./test/unit/rmq_admin/fill_body.py
                 ./test/unit/rmq_admin/help_message.py
                 ./test/unit/rmq_admin/main.py
+                ./test/unit/rmq_admin/node_health.py
+                ./test/unit/rmq_admin/run_program.py
                 deactivate
                 rm -rf test_env
                 """
@@ -79,6 +76,11 @@ pipeline {
                     server.upload(uploadSpec)
                 }
             }
+        }
+    }
+    post {
+        always {
+            cleanWs disableDeferredWipeout: true
         }
     }
 }
