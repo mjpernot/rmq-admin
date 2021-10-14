@@ -41,8 +41,8 @@ class MailTest(object):
     Description:  Class which is a representation of an email.
 
     Methods:
-        __init__ -> Class instance initilization.
-        add_2_msg -> Add text to text string if data is present.
+        __init__
+        add_2_msg
 
     """
 
@@ -53,12 +53,6 @@ class MailTest(object):
         Description:  Initialization of an instance of the Mail class.
 
         Arguments:
-            (input) toline -> To email address.
-            (input) subj -> Subject line of mail.
-            (input) msg_type -> Type of email being sent.
-            (input) frm -> From email address.
-            (input) host -> 'localhost' or IP.
-            (input) host_name -> Host name of server.
 
         """
 
@@ -83,7 +77,6 @@ class MailTest(object):
         Description:  Add text to text string if data is present.
 
         Arguments:
-            (input) txt_ln -> Line of text to add to message.
 
         """
 
@@ -103,9 +96,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_multiple_lines -> Test with multiple lines from list.
-        test_single_line -> Test with single line from list.
+        setUp
+        test_multiple_lines
+        test_single_line
 
     """
 
