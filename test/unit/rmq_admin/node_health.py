@@ -73,7 +73,7 @@ class CfgTest(object):
         """
 
         self.user = "username"
-        self.passwd = None
+        self.japd = None
         self.host = "hostname"
         self.m_port = 15672
 
