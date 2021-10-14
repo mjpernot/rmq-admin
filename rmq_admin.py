@@ -207,6 +207,7 @@ def main(**kwargs):
         file_chk_list -> contains the options which will have files included.
         file_crt_list -> contains options which require files to be created.
         func_dict -> dictionary list for the function calls or other options.
+        opt_con_req_list -> contains the options that require other options.
         opt_multi_list -> contains the options that will have multiple values.
         opt_req_list -> contains options that are required for the program.
         opt_val_list -> contains options which require values.
@@ -224,6 +225,7 @@ def main(**kwargs):
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
     func_dict = {"-N": node_health}
+    opt_con_req_list = {"-s": ["-t"]}
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y"]
@@ -236,7 +238,8 @@ def main(**kwargs):
        and not arg_parser.arg_require(args_array, opt_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
        and not arg_parser.arg_file_chk(
-           args_array, file_chk_list, file_crt_list):
+           args_array, file_chk_list, file_crt_list) \
+       and arg_parser.arg_cond_req(args_array, opt_con_req_list):
 
         try:
             prog_lock = gen_class.ProgramLock(
