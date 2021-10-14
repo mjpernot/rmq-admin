@@ -1,0 +1,11 @@
+# RabbitMQ Configuration file
+# Classification (U)
+# Unclassified until filled.
+user = "USER"
+japd = "PASSWORD"
+host = "HOSTNAME"
+# RabbitMQ management port, default is 15672
+m_port = 15672
+# RabbitMQ listening port, default is 5672.
+q_port = 5672
+
