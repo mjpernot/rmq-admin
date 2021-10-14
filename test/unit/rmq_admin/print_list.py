@@ -41,8 +41,6 @@ def linecnt(fname):
     Description:  Count number of lines in a file.
 
     Arguments:
-        (input) fname -> File name.
-        (output) Number of lines in the file.
 
     """
 
@@ -56,14 +54,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_mode_a_passed -> Test with file mode of append passing mode.
-        test_mode_w_default -> Test file mode overwrite using default setting.
-        test_write_file2 -> Test with writing multiple lines to file.
-        test_write_file -> Test with writing to file.
-        test_std_out2 -> Test with printing multiple lines to standard out.
-        test_std_out -> Test with printing to standard out.
-        tearDown -> Cleanup of testing environment.
+        setUp
+        test_mode_a_passed
+        test_mode_w_default
+        test_write_file2
+        test_write_file
+        test_std_out2
+        test_std_out
+        tearDown
 
     """
 
