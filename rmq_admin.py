@@ -102,35 +102,6 @@ def create_base(cfg):
     return http + "://" + cfg.host + ":" + str(cfg.m_port) + "/api/"
 
 
-def print_list(data, **kwargs):
-
-    """Function:  print_list
-
-    Description:  Print the data list to either a file or standard out.
-
-    Arguments:
-        (input) data -> List of data strings.
-        (input) **kwargs:
-            ofile -> Path and name of file to write to.
-            mode -> a|w - File mode (append|overwrite).
-
-    """
-
-    data = list(data)
-    mode = kwargs.get("mode", "w")
-    ofile = kwargs.get("ofile", False)
-    outfile = sys.stdout
-
-    if ofile:
-        outfile = open(ofile, mode)
-
-    for line in data:
-        print(line, file=outfile)
-
-    if ofile:
-        outfile.close()
-
-
 def fill_body(mail, data):
 
     """Function:  fill_body
@@ -191,14 +162,14 @@ def node_health(base_url, cfg, args_array):
         results.append(("\tStatus: %s" % (data["status"])).expandtabs(TAB_LEN))
 
     if (data["status"] != "ok" and not no_std) or (verbose and not no_std):
-        print_list(results)
+        gen_libs.print_list(results)
 
     if mail and (data["status"] != "ok" or verbose):
         fill_body(mail, results)
         mail.send_mail()
 
     if ofile and (data["status"] != "ok" or verbose):
-        print_list(results, mode=mode, ofile=ofile)
+        gen_libs.print_list(results, mode=mode, ofile=ofile)
 
 
 def run_program(args_array, func_dict):
