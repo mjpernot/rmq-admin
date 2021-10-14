@@ -17,18 +17,18 @@
             Required argument.
         -d dir_path => Directory path for option '-c'.
             Required argument.
+
         -N -> Node health check.
-        -o directory_path/file => Directory path and file name for output.
-            Default is to overwrite the file.
-            Use the -a option to append to an existing file.
-        -a => Append output to output file.
-        -t to_email to_email2 => Enables emailing capability for an option if
-            the option allows it.  Sends output to one or more email addresses.
-            For use with the -j option only.
-        -s subject_line => Subject line of email.  If none is provided then a
-            default one will be used.
-        -w -> Print results of check for all returns.
-        -z => Suppress standard out.
+            -w -> Print results of check for all returns.
+            -z => Suppress standard out.
+            -t to_email to_email2 => Enables emailing capability for an option
+                if the option allows it.  Sends output to one or more email
+                addresses.
+                -s subject_line => Subject line of email.  If none is provided
+                    then a default one will be used.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to output file.
+
         -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
@@ -39,7 +39,7 @@
 
             # RabbitMQ Configuration file
             user = "USER"
-            japd = "PASSWORD"
+            japd = "PSWORD"
             host = "HOSTNAME"
             # RabbitMQ management port, default is 15672
             m_port = 15672
@@ -47,7 +47,7 @@
             q_port = 5672
 
     Example:
-        rmq_admin.py -c rabbitmq -d config
+        rmq_admin.py -c rabbitmq -d config -N
 
 """
 
@@ -72,7 +72,7 @@ __version__ = version.__version__
 TAB_LEN = 4
 
 
-def help_message(**kwargs):
+def help_message():
 
     """Function:  help_message
 
@@ -86,7 +86,7 @@ def help_message(**kwargs):
     print(__doc__)
 
 
-def create_base(cfg, **kwargs):
+def create_base(cfg):
 
     """Function:  create_base
 
@@ -131,7 +131,7 @@ def print_list(data, **kwargs):
         outfile.close()
 
 
-def fill_body(mail, data, **kwargs):
+def fill_body(mail, data):
 
     """Function:  fill_body
 
@@ -149,7 +149,7 @@ def fill_body(mail, data, **kwargs):
         mail.add_2_msg(line)
 
 
-def node_health(base_url, cfg, args_array, **kwargs):
+def node_health(base_url, cfg, args_array):
 
     """Function:  node_health
 
@@ -165,7 +165,6 @@ def node_health(base_url, cfg, args_array, **kwargs):
     global TAB_LEN
 
     mail = None
-    mode = "w"
     verbose = args_array.get("-w", False)
     no_std = args_array.get("-z", False)
     ofile = args_array.get("-o", False)
@@ -174,9 +173,7 @@ def node_health(base_url, cfg, args_array, **kwargs):
     results.append(("\tAsOf: %s" % (dtg)).expandtabs(TAB_LEN))
     data = requests.get(base_url + "healthchecks/node",
                         auth=(cfg.user, cfg.japd)).json()
-
-    if args_array.get("-a", False):
-        mode = "a"
+    mode = "a" if args_array.get("-a", False) else "w"
 
     if args_array.get("-t", False):
         mail = gen_class.setup_mail(
@@ -204,7 +201,7 @@ def node_health(base_url, cfg, args_array, **kwargs):
         print_list(results, mode=mode, ofile=ofile)
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args_array, func_dict):
 
     """Function:  run_program
 
@@ -261,18 +258,18 @@ def main(**kwargs):
     opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list,
-                                       multi_val=opt_multi_list)
+    args_array = arg_parser.arg_parse2(
+        cmdline.argv, opt_val_list, multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and not arg_parser.arg_require(args_array, opt_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-       and not arg_parser.arg_file_chk(args_array, file_chk_list,
-                                       file_crt_list):
+       and not arg_parser.arg_file_chk(
+           args_array, file_chk_list, file_crt_list):
 
         try:
-            prog_lock = gen_class.ProgramLock(cmdline.argv,
-                                              args_array.get("-y", ""))
+            prog_lock = gen_class.ProgramLock(
+                cmdline.argv, args_array.get("-y", ""))
             run_program(args_array, func_dict)
             del prog_lock
 
