@@ -40,7 +40,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -55,7 +55,7 @@ class CfgTest(object):
         """
 
         self.user = "username"
-        self.passwd = None
+        self.japd = None
         self.host = "hostname"
         self.m_port = 15672
 
@@ -67,9 +67,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_port_str -> Test with port passed as a string.
-        test_create_base -> Test with no arguments.
+        setUp
+        test_port_str
+        test_create_base
 
     """
 
