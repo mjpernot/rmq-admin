@@ -43,8 +43,6 @@ def linecnt(fname):
     Description:  Count number of lines in a file.
 
     Arguments:
-        (input) fname -> File name.
-        (output) Number of lines in the file.
 
     """
 
@@ -58,7 +56,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -85,9 +83,9 @@ class MailTest(object):
     Description:  Class which is a representation of an email.
 
     Methods:
-        __init__ -> Class instance initilization.
-        add_2_msg -> Add text to text string if data is present.
-        send_mail -> Send email.
+        __init__
+        add_2_msg
+        send_mail
 
     """
 
@@ -98,12 +96,6 @@ class MailTest(object):
         Description:  Initialization of an instance of the Mail class.
 
         Arguments:
-            (input) toline -> To email address.
-            (input) subj -> Subject line of mail.
-            (input) msg_type -> Type of email being sent.
-            (input) frm -> From email address.
-            (input) host -> 'localhost' or IP.
-            (input) host_name -> Host name of server.
 
         """
 
@@ -128,7 +120,6 @@ class MailTest(object):
         Description:  Add text to text string if data is present.
 
         Arguments:
-            (input) txt_ln -> Line of text to add to message.
 
         """
 
@@ -160,8 +151,8 @@ class GetTest(object):
     Description:  Class which is a representation of a request call.
 
     Methods:
-        __init__ -> Class instance initilization.
-        json -> Return status of request call.
+        __init__
+        json
 
     """
 
@@ -172,7 +163,7 @@ class GetTest(object):
         Description:  Initialization of an instance class.
 
         Arguments:
-            (input) data -> Results of requests.
+            (input) data
 
         """
 
@@ -198,32 +189,32 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_err_verb_all -> Test with no errors detected - all - verbose.
-        test_no_err_all -> Test with no errors detected - all outputs.
-        test_no_err_verb_std_file -> Test no erro to std out & file - verbose.
-        test_no_err_std_file -> Test with no errors to standard out and file.
-        test_no_err_verb_file_mail -> Test no errors: file & mail: verbose.
-        test_no_err_file_mail -> Test with no errors detected - file and mail.
-        test_no_err_verb_std_mail -> Test no erro to std out & mail - verbose.
-        test_no_err_std_mail -> Test with no errors to standard out and mail.
-        test_err_verb_mail -> Test with error for mail - verbose.
-        test_err_mail -> Test with error for mail.
-        test_no_err_verb_mail -> Test with no error for mail - verbose.
-        test_no_err_mail -> Test with no error for mail.
-        test_append_verb_file -> Test with append file and verbose.
-        test_append_file -> Test with errors detected - append file.
-        test_err_verb_file -> Test with errors detected - write file - verbose.
-        test_err_file -> Test with errors detected - write file.
-        test_no_err_verb_file -> Test no errors detected: write file, verbose.
-        test_no_err_file -> Test with no errors detected - write file.
-        test_errors_suppr -> Test with errors detected - suppressed.
-        test_no_err_verb_suppr -> Test no errors detected: verbose, suppressed.
-        test_errors_verbose -> Test with errors detected - verbose mode.
-        test_errors -> Test with errors detected.
-        test_no_errors_verbose -> Test with no errors detected - verbose mode.
-        test_no_errors -> Test with no errors detected.
-        tearDown -> Cleanup of testing environment.
+        setUp
+        test_no_err_verb_all
+        test_no_err_all
+        test_no_err_verb_std_file
+        test_no_err_std_file
+        test_no_err_verb_file_mail
+        test_no_err_file_mail
+        test_no_err_verb_std_mail
+        test_no_err_std_mail
+        test_err_verb_mail
+        test_err_mail
+        test_no_err_verb_mail
+        test_no_err_mail
+        test_append_verb_file
+        test_append_file
+        test_err_verb_file
+        test_err_file
+        test_no_err_verb_file
+        test_no_err_file
+        test_errors_suppr
+        test_no_err_verb_suppr
+        test_errors_verbose
+        test_errors
+        test_no_errors_verbose
+        test_no_errors
+        tearDown
 
     """
 
