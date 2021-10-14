@@ -270,9 +270,10 @@ class UnitTest(unittest.TestCase):
             self.header + self.subhdr + self.entry2 + self.entry3 + self.entry4
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
-    @mock.patch("rmq_admin.gen_libs")
+    @mock.patch("rmq_admin.gen_libs.get_date")
+    @mock.patch("rmq_admin.gen_libs.get_time")
     @mock.patch("rmq_admin.requests.get")
-    def test_no_err_verb_all(self, mock_get, mock_lib, mock_mail):
+    def test_no_err_verb_all(self, mock_get, mock_time, mock_date, mock_mail):
 
         """Function:  test_no_err_verb_all
 
@@ -283,8 +284,8 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_get.return_value = self.get
-        mock_lib.get_date.return_value = self.date
-        mock_lib.get_time.return_value = self.time
+        mock_date.return_value = self.date
+        mock_time.return_value = self.time
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
@@ -353,9 +354,11 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(os.path.isfile(self.file))
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
-    @mock.patch("rmq_admin.gen_libs")
+    @mock.patch("rmq_admin.gen_libs.get_date")
+    @mock.patch("rmq_admin.gen_libs.get_time")
     @mock.patch("rmq_admin.requests.get")
-    def test_no_err_verb_file_mail(self, mock_get, mock_lib, mock_mail):
+    def test_no_err_verb_file_mail(self, mock_get, mock_time, mock_date,
+                                   mock_mail):
 
         """Function:  test_no_err_verb_file_mail
 
@@ -366,8 +369,8 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_get.return_value = self.get
-        mock_lib.get_date.return_value = self.date
-        mock_lib.get_time.return_value = self.time
+        mock_date.return_value = self.date
+        mock_time.return_value = self.time
         mock_mail.return_value = self.mail
 
         rmq_admin.node_health(self.base_url, self.cfg, self.args_array14)
