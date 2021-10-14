@@ -41,9 +41,6 @@ def node_health(base_url, cfg, args_array):
     Description:  node_health function.
 
     Arguments:
-        (input) base_url -> Base URL for connection to RabbitMQ node.
-        (input) cfg -> Configuration module name.
-        (input) args_array -> Array of command line options and values.
 
     """
 
@@ -62,7 +59,7 @@ class CfgTest(object):
     Description:  Class which is a representation of a cfg module.
 
     Methods:
-        __init__ -> Initialize configuration environment.
+        __init__
 
     """
 
@@ -77,7 +74,7 @@ class CfgTest(object):
         """
 
         self.user = "username"
-        self.passwd = None
+        self.japd = None
         self.host = "hostname"
         self.m_port = 15672
 
@@ -89,9 +86,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_func_call -> Test with function called.
-        test_no_func -> Test with no functions selected.
+        setUp
+        test_func_call
+        test_no_func
 
     """
 
