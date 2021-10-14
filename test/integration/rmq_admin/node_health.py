@@ -42,8 +42,6 @@ def linecnt(fname):
     Description:  Count number of lines in a file.
 
     Arguments:
-        (input) fname -> File name.
-        (output) Number of lines in the file.
 
     """
 
@@ -57,20 +55,20 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_verb_std_file_mail -> Test with std out, file and mail - verbose.
-        test_verb_std_file -> Test with strandard out and file - verbose.
-        test_verb_mail_file -> Test with mail and file - verbose.
-        test_verb_std_mail -> Test with standard out and mail - verbose.
-        test_no_err_verb_mail -> Test with no error for mail - verbose.
-        test_no_err_mail -> Test with no error for mail.
-        test_append_verb_file -> Test with append file and verbose.
-        test_no_err_verb_file -> Test no errors detected: write file, verbose.
-        test_no_err_file -> Test with no errors detected - write file.
-        test_no_err_verb_suppr -> Test no errors detected: verbose, suppressed.
-        test_no_errors_verbose -> Test with no errors detected - verbose mode.
-        test_no_errors -> Test with no errors detected.
-        tearDown -> Cleanup of testing environment.
+        setUp
+        test_verb_std_file_mail
+        test_verb_std_file
+        test_verb_mail_file
+        test_verb_std_mail
+        test_no_err_verb_mail
+        test_no_err_mail
+        test_append_verb_file
+        test_no_err_verb_file
+        test_no_err_file
+        test_no_err_verb_suppr
+        test_no_errors_verbose
+        test_no_errors
+        tearDown
 
     """
 
