@@ -46,7 +46,7 @@ def linecnt(fname):
 
     """
 
-    return sum(1 for line in open(fname))
+    return sum(1 for _ in open(fname))
 
 
 class CfgTest(object):
