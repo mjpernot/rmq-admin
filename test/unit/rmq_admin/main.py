@@ -76,6 +76,8 @@ class UnitTest(unittest.TestCase):
         test_arg_dir_false
         test_arg_file_true
         test_arg_file_false
+        test_arg_cond_req_false
+        test_arg_cond_req_true
         test_run_program
         test_programlock_true
         test_programlock_false
@@ -250,6 +252,55 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_arg.arg_file_chk.return_value = False
+        mock_arg.arg_cond_req.return_value = False
+        mock_lock.return_value = self.proglock
+
+        self.assertFalse(rmq_admin.main())
+
+    @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
+    @mock.patch("rmq_admin.gen_class.ProgramLock")
+    @mock.patch("rmq_admin.gen_libs.help_func")
+    @mock.patch("rmq_admin.arg_parser")
+    def test_arg_cond_req_false(self, mock_arg, mock_help, mock_lock):
+
+        """Function:  test_arg_cond_req_false
+
+        Description:  Test arg_cond_req if returns false.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_require.return_value = False
+        mock_arg.arg_dir_chk_crt.return_value = False
+        mock_arg.arg_file_chk.return_value = False
+        mock_arg.arg_cond_req.return_value = False
+        mock_lock.return_value = self.proglock
+
+        self.assertFalse(rmq_admin.main())
+
+    @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
+    @mock.patch("rmq_admin.gen_class.ProgramLock")
+    @mock.patch("rmq_admin.gen_libs.help_func")
+    @mock.patch("rmq_admin.arg_parser")
+    def test_arg_cond_req_true(self, mock_arg, mock_help, mock_lock):
+
+        """Function:  test_arg_cond_req_true
+
+        Description:  Test arg_cond_req if returns true.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_require.return_value = False
+        mock_arg.arg_dir_chk_crt.return_value = False
+        mock_arg.arg_file_chk.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())
@@ -273,6 +324,7 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_arg.arg_file_chk.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())
@@ -296,6 +348,7 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_arg.arg_file_chk.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())
@@ -319,6 +372,7 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_arg.arg_file_chk.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_lock.side_effect = \
             rmq_admin.gen_class.SingleInstanceException
 
@@ -344,6 +398,7 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_arg.arg_file_chk.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())
