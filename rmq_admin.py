@@ -214,13 +214,9 @@ def main(**kwargs):
 
     Arguments:
         (input) sys.argv -> Arguments from the command line.
-        (input) **kwargs:
-            argv_list -> List of arguments from another program.
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
-    cmdline.argv = list(kwargs.get("argv_list", cmdline.argv))
     dir_chk_list = ["-d"]
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
@@ -229,6 +225,8 @@ def main(**kwargs):
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y"]
+
+    cmdline = gen_libs.get_inst(sys)
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(
