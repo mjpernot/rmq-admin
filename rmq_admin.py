@@ -229,25 +229,31 @@ def main(**kwargs):
     cmdline = gen_libs.get_inst(sys)
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(
-        cmdline.argv, opt_val_list, multi_val=opt_multi_list)
+    args = gen_class.ArgParser(
+        cmdline.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
+        do_parse=True)
 
-    if not gen_libs.help_func(args_array, __version__, help_message) \
-       and not arg_parser.arg_require(args_array, opt_req_list) \
-       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-       and not arg_parser.arg_file_chk(args_array, file_chk_list,
-                                       file_crt_list) \
-       and arg_parser.arg_cond_req(args_array, opt_con_req_list):
+    if not gen_libs.help_func(args.args_array, __version__, help_message) \
+       and args.arg_require(opt_req=opt_req_list) \
+       and args.arg_dir_chk_crt(dir_chk=dir_chk_list) \
+       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list) \
+       and args.arg_cond_req(opt_con_req=opt_con_req_list):
+
+#       and not arg_parser.arg_require(args_array, opt_req_list) \
+#       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
+#       and not arg_parser.arg_file_chk(args_array, file_chk_list,
+#                                       file_crt_list) \
+#       and arg_parser.arg_cond_req(args_array, opt_con_req_list):
 
         try:
             prog_lock = gen_class.ProgramLock(
-                cmdline.argv, args_array.get("-y", ""))
+                cmdline.argv, args.get_val("-y", def_val=""))
             run_program(args_array, func_dict)
             del prog_lock
 
         except gen_class.SingleInstanceException:
             print("rmq_admin lock in place for: %s"
-                  % (args_array.get("-y", "")))
+                  % (args.get_val("-y", def_val="")))
 
 
 if __name__ == "__main__":

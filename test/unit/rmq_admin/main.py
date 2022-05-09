@@ -30,9 +30,58 @@ import mock
 sys.path.append(os.getcwd())
 import rmq_admin
 import lib.gen_libs as gen_libs
+import lib.gen_class as gen_class
 import version
 
 __version__ = version.__version__
+
+
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_file_chk
+        arg_valid_val
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+### STOPPED HERE
+        self.cmdline = None
+        self.args_array = dict()
+#        self.opt_val = None
+#        self.multi_val = None
+#        self.do_parse = None
+#        self.opt_req = None
+#        self.file_chk = None
+#        self.file_crt = None
+#        self.opt_valid_val = None
+
+    def get_val(self, skey, def_val):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
 
 
 class ProgramLock(object):
@@ -95,13 +144,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array = {"-c": "rabbit", "-d": "config", "-N": True}
-        self.args_array2 = {"-c": "rabbit", "-d": "config", "-N": True,
-                            "-y": "Flavor"}
+#        self.args_array = {"-c": "rabbit", "-d": "config", "-N": True}
+#        self.args_array2 = {"-c": "rabbit", "-d": "config", "-N": True,
+#                            "-y": "Flavor"}
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
+        self.args = gen_class.ArgParser(["ProgramName.py"])
 
     @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
+    @mock.patch("rmq_admin.gen_class.ArgParser")
     def test_help_true(self, mock_arg, mock_help):
 
         """Function:  test_help_true
@@ -112,13 +162,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
+        mock_arg.return_value = self.args
         mock_help.return_value = True
 
         self.assertFalse(rmq_admin.main())
 
+    @mock.patch("gen_class.ArgParser.arg_require",
+                mock.Mock(return_value=False))
     @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
+    @mock.patch("rmq_admin.gen_class.ArgParser")
     def test_help_false(self, mock_arg, mock_help):
 
         """Function:  test_help_false
@@ -129,9 +181,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
+#        mock_arg.arg_require.return_value = False
 
         self.assertFalse(rmq_admin.main())
 

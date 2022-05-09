@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.0.2] - 2021-10-14
+### Changed
+- main: Replaced processing of args_array with the gen_class.ArgParser class.
 
 
 ## [0.0.1] - 2020-07-22
