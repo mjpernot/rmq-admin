@@ -44,8 +44,10 @@ class ArgParser(object):
 
     Methods:
         __init__
+        arg_cond_req
+        arg_dir_chk_crt
         arg_file_chk
-        arg_valid_val
+        arg_require
         get_val
 
     """
@@ -60,16 +62,75 @@ class ArgParser(object):
 
         """
 
-### STOPPED HERE
         self.cmdline = None
         self.args_array = dict()
-#        self.opt_val = None
-#        self.multi_val = None
-#        self.do_parse = None
-#        self.opt_req = None
-#        self.file_chk = None
-#        self.file_crt = None
-#        self.opt_valid_val = None
+        self.opt_req = None
+        self.dir_chk = None
+        self.file_chk = None
+        self.file_crt = None
+        self.opt_con_req = None
+        self.opt_req2 = True
+        self.dir_chk2 = True
+        self.file_chk2 = True
+        self.opt_con_req2 = True
+
+    def arg_cond_req(self, opt_con_req):
+
+        """Method:  arg_cond_req
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_cond_req.
+
+        Arguments:
+
+        """
+
+        self.opt_con_req = opt_con_req
+
+        return self.opt_con_req2
+
+    def arg_dir_chk_crt(self, dir_chk):
+
+        """Method:  arg_dir_chk_crt
+
+        Description:  Method stub holder for
+            gen_class.ArgParser.arg_dir_chk_crt.
+
+        Arguments:
+
+        """
+
+        self.dir_chk = dir_chk
+
+        return self.dir_chk2
+
+    def arg_file_chk(self, file_chk, file_crt):
+
+        """Method:  arg_file_chk
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_file_chk.
+
+        Arguments:
+
+        """
+
+        self.file_chk = file_chk
+        self.file_crt = file_crt
+
+        return self.file_chk2
+
+    def arg_require(self, opt_req):
+
+        """Method:  arg_require
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_require.
+
+        Arguments:
+
+        """
+
+        self.opt_req = opt_req
+
+        return self.opt_req2
 
     def get_val(self, skey, def_val):
 
@@ -119,12 +180,12 @@ class UnitTest(unittest.TestCase):
         setUp
         test_help_true
         test_help_false
-        test_arg_req_true
         test_arg_req_false
-        test_arg_dir_true
+        test_arg_req_true
         test_arg_dir_false
-        test_arg_file_true
+        test_arg_dir_true
         test_arg_file_false
+        test_arg_file_true
         test_arg_cond_req_false
         test_arg_cond_req_true
         test_run_program
@@ -144,15 +205,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-#        self.args_array = {"-c": "rabbit", "-d": "config", "-N": True}
-#        self.args_array2 = {"-c": "rabbit", "-d": "config", "-N": True,
-#                            "-y": "Flavor"}
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
-        self.args = gen_class.ArgParser(["ProgramName.py"])
+        self.args = ArgParser()
 
-    @mock.patch("rmq_admin.gen_libs.help_func")
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.gen_class.ArgParser")
-    def test_help_true(self, mock_arg, mock_help):
+    def test_help_true(self, mock_arg):
 
         """Function:  test_help_true
 
@@ -163,15 +221,12 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_arg.return_value = self.args
-        mock_help.return_value = True
 
         self.assertFalse(rmq_admin.main())
 
-    @mock.patch("gen_class.ArgParser.arg_require",
-                mock.Mock(return_value=False))
-    @mock.patch("rmq_admin.gen_libs.help_func")
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
     @mock.patch("rmq_admin.gen_class.ArgParser")
-    def test_help_false(self, mock_arg, mock_help):
+    def test_help_false(self, mock_arg):
 
         """Function:  test_help_false
 
@@ -181,33 +236,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.opt_req2 = False
+
         mock_arg.return_value = self.args
-        mock_help.return_value = False
-#        mock_arg.arg_require.return_value = False
 
         self.assertFalse(rmq_admin.main())
 
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_arg_req_true(self, mock_arg, mock_help):
-
-        """Function:  test_arg_req_true
-
-        Description:  Test arg_require if returns true.
-
-        Arguments:
-
-        """
-
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = True
-
-        self.assertFalse(rmq_admin.main())
-
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_arg_req_false(self, mock_arg, mock_help):
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_arg_req_false(self, mock_arg):
 
         """Function:  test_arg_req_false
 
@@ -217,35 +254,33 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = True
+        self.args.opt_req2 = False
+
+        mock_arg.return_value = self.args
 
         self.assertFalse(rmq_admin.main())
 
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_arg_dir_true(self, mock_arg, mock_help):
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_arg_req_true(self, mock_arg):
 
-        """Function:  test_arg_dir_true
+        """Function:  test_arg_req_true
 
-        Description:  Test arg_dir_chk_crt if returns true.
+        Description:  Test arg_require if returns true.
 
         Arguments:
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = True
+        self.args.dir_chk2 = False
+
+        mock_arg.return_value = self.args
 
         self.assertFalse(rmq_admin.main())
 
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_arg_dir_false(self, mock_arg, mock_help):
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_arg_dir_false(self, mock_arg):
 
         """Function:  test_arg_dir_false
 
@@ -255,41 +290,33 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_cond_req.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = True
+        self.args.dir_chk2 = False
+
+        mock_arg.return_value = self.args
 
         self.assertFalse(rmq_admin.main())
 
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_arg_file_true(self, mock_arg, mock_help):
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_arg_dir_true(self, mock_arg):
 
-        """Function:  test_arg_file_true
+        """Function:  test_arg_dir_true
 
-        Description:  Test arg_file_chk if returns true.
+        Description:  Test arg_dir_chk_crt if returns true.
 
         Arguments:
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_cond_req.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = True
+        self.args.file_chk2 = False
+
+        mock_arg.return_value = self.args
 
         self.assertFalse(rmq_admin.main())
 
-    @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
-    @mock.patch("rmq_admin.gen_class.ProgramLock")
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_arg_file_false(self, mock_arg, mock_help, mock_lock):
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_arg_file_false(self, mock_arg):
 
         """Function:  test_arg_file_false
 
@@ -299,21 +326,33 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
-        mock_arg.arg_cond_req.return_value = False
-        mock_lock.return_value = self.proglock
+        self.args.file_chk2 = False
+
+        mock_arg.return_value = self.args
 
         self.assertFalse(rmq_admin.main())
 
-    @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
-    @mock.patch("rmq_admin.gen_class.ProgramLock")
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_arg_cond_req_false(self, mock_arg, mock_help, mock_lock):
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_arg_file_true(self, mock_arg):
+
+        """Function:  test_arg_file_true
+
+        Description:  Test arg_file_chk if returns true.
+
+        Arguments:
+
+        """
+
+        self.args.opt_con_req2 = False
+
+        mock_arg.return_value = self.args
+
+        self.assertFalse(rmq_admin.main())
+
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_arg_cond_req_false(self, mock_arg):
 
         """Function:  test_arg_cond_req_false
 
@@ -323,21 +362,17 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
-        mock_arg.arg_cond_req.return_value = False
-        mock_lock.return_value = self.proglock
+        self.args.opt_con_req2 = False
+
+        mock_arg.return_value = self.args
 
         self.assertFalse(rmq_admin.main())
 
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
     @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.gen_class.ProgramLock")
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_arg_cond_req_true(self, mock_arg, mock_help, mock_lock):
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_arg_cond_req_true(self, mock_arg, mock_lock):
 
         """Function:  test_arg_cond_req_true
 
@@ -347,21 +382,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
-        mock_arg.arg_cond_req.return_value = True
+        mock_arg.return_value = self.args
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())
 
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
     @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.gen_class.ProgramLock")
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_run_program(self, mock_arg, mock_help, mock_lock):
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_run_program(self, mock_arg, mock_lock):
 
         """Function:  test_run_program
 
@@ -371,21 +401,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
-        mock_arg.arg_cond_req.return_value = True
+        mock_arg.return_value = self.args
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())
 
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
     @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.gen_class.ProgramLock")
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_programlock_true(self, mock_arg, mock_help, mock_lock):
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_programlock_true(self, mock_arg, mock_lock):
 
         """Function:  test_programlock_true
 
@@ -395,21 +420,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
-        mock_arg.arg_cond_req.return_value = True
+        mock_arg.return_value = self.args
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())
 
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
     @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.gen_class.ProgramLock")
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_programlock_false(self, mock_arg, mock_help, mock_lock):
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_programlock_false(self, mock_arg, mock_lock):
 
         """Function:  test_programlock_false
 
@@ -419,23 +439,18 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
-        mock_arg.arg_cond_req.return_value = True
-        mock_lock.side_effect = \
-            rmq_admin.gen_class.SingleInstanceException
+        mock_arg.return_value = self.args
+        mock_lock.return_value = self.proglock
+        mock_lock.side_effect = rmq_admin.gen_class.SingleInstanceException
 
         with gen_libs.no_std_out():
             self.assertFalse(rmq_admin.main())
 
+    @mock.patch("rmq_admin.gen_libs.help_func", mock.Mock(return_value=False))
     @mock.patch("rmq_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.gen_class.ProgramLock")
-    @mock.patch("rmq_admin.gen_libs.help_func")
-    @mock.patch("rmq_admin.arg_parser")
-    def test_programlock_id(self, mock_arg, mock_help, mock_lock):
+    @mock.patch("rmq_admin.gen_class.ArgParser")
+    def test_programlock_id(self, mock_arg, mock_lock):
 
         """Function:  test_programlock_id
 
@@ -445,12 +460,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array2
-        mock_help.return_value = False
-        mock_arg.arg_require.return_value = False
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
-        mock_arg.arg_cond_req.return_value = True
+        self.args.args_array = {"-y": "FlavorID"}
+
+        mock_arg.return_value = self.args
+        mock_lock.return_value = self.proglock
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())

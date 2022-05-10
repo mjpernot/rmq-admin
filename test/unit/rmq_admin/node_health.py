@@ -49,6 +49,43 @@ def linecnt(fname):
     return sum(1 for _ in open(fname))
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {"-c": "rabbitmq", "-d": "config"}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class CfgTest(object):
 
     """Class:  CfgTest
@@ -228,6 +265,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
         self.mail = MailTest("toaddr")
         self.cfg = CfgTest()
         self.base_url = "http://localhost:15672/api/"
@@ -236,26 +274,27 @@ class UnitTest(unittest.TestCase):
         self.get = GetTest(self.data)
         self.get2 = GetTest(self.data2)
         self.file = "test/unit/rmq_admin/tmp/outfile.txt"
-        self.args_array = {}
-        self.args_array2 = {"-z": True}
-        self.args_array3 = {"-w": True}
-        self.args_array4 = {"-w": True, "-z": True}
-        self.args_array5 = {"-o": self.file, "-z": True}
-        self.args_array6 = {"-o": self.file, "-w": True, "-z": True}
-        self.args_array7 = {"-o": self.file, "-a": True, "-z": True}
-        self.args_array8 = {"-o": self.file, "-a": True, "-w": True,
-                            "-z": True}
-        self.args_array9 = {"-t": "toaddr", "-z": True}
-        self.args_array10 = {"-t": "toaddr", "-w": True, "-z": True}
-        self.args_array11 = {"-t": "toaddr"}
-        self.args_array12 = {"-t": "toaddr", "-w": True}
-        self.args_array13 = {"-t": "toaddr", "-o": self.file, "-z": True}
-        self.args_array14 = {"-t": "toaddr", "-o": self.file, "-w": True,
-                             "-z": True}
-        self.args_array15 = {"-o": self.file}
-        self.args_array16 = {"-o": self.file, "-w": True}
-        self.args_array17 = {"-t": "toaddr", "-o": self.file}
-        self.args_array18 = {"-t": "toaddr", "-o": self.file, "-w": True}
+# STOPPED HERE
+#        self.args_array = {}
+#        self.args_array2 = {"-z": True}
+#        self.args_array3 = {"-w": True}
+#        self.args_array4 = {"-w": True, "-z": True}
+#        self.args_array5 = {"-o": self.file, "-z": True}
+#        self.args_array6 = {"-o": self.file, "-w": True, "-z": True}
+#        self.args_array7 = {"-o": self.file, "-a": True, "-z": True}
+#        self.args_array8 = {"-o": self.file, "-a": True, "-w": True,
+#                            "-z": True}
+#        self.args_array9 = {"-t": "toaddr", "-z": True}
+#        self.args_array10 = {"-t": "toaddr", "-w": True, "-z": True}
+#        self.args_array11 = {"-t": "toaddr"}
+#        self.args_array12 = {"-t": "toaddr", "-w": True}
+#        self.args_array13 = {"-t": "toaddr", "-o": self.file, "-z": True}
+#        self.args_array14 = {"-t": "toaddr", "-o": self.file, "-w": True,
+#                             "-z": True}
+#        self.args_array15 = {"-o": self.file}
+#        self.args_array16 = {"-o": self.file, "-w": True}
+#        self.args_array17 = {"-t": "toaddr", "-o": self.file}
+#        self.args_array18 = {"-t": "toaddr", "-o": self.file, "-w": True}
         self.date = "2020-07-24"
         self.time = "10:20:10"
         self.header = "Node Health Check"

@@ -52,6 +52,43 @@ def node_health(base_url, cfg, args_array):
     return status
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.args_array = {"-c": "rabbitmq", "-d": "config"}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class CfgTest(object):
 
     """Class:  CfgTest
@@ -102,11 +139,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
+
         http = "http"
         self.cfg = CfgTest()
         self.func_dict = {"-N": node_health}
-        self.args_array = {"-c": "rabbitmq", "-d": "config"}
-        self.args_array2 = {"-c": "rabbitmq", "-d": "config", "-N": True}
         self.base_url = \
             http + "://" + self.cfg.host + ":" + str(self.cfg.m_port) + "/api/"
 
@@ -122,11 +159,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array["-N"] = True
+
         mock_cfg.return_value = self.cfg
         mock_base.return_value = self.base_url
 
-        self.assertFalse(rmq_admin.run_program(self.args_array2,
-                                               self.func_dict))
+        self.assertFalse(rmq_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("rmq_admin.create_base")
     @mock.patch("rmq_admin.gen_libs.load_module")
@@ -143,8 +181,7 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.cfg
         mock_base.return_value = self.base_url
 
-        self.assertFalse(rmq_admin.run_program(self.args_array,
-                                               self.func_dict))
+        self.assertFalse(rmq_admin.run_program(self.args, self.func_dict))
 
 
 if __name__ == "__main__":
