@@ -140,7 +140,6 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args = ArgParser()
-
         http = "http"
         self.cfg = CfgTest()
         self.func_dict = {"-N": node_health}
