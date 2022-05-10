@@ -93,7 +93,7 @@ def create_base(cfg):
     Description:  Create base url to connect to RabbitMQ node.
 
     Arguments:
-        (input) cfg -> Configuration module name.
+        (input) cfg -> Configuration module name
 
     """
 
@@ -109,8 +109,8 @@ def fill_body(mail, data):
     Description:  Add data to mail body from data list.
 
     Arguments:
-        (input) mail -> Mail class instance.
-        (input) data -> List of data strings.
+        (input) mail -> Mail class instance
+        (input) data -> List of data strings
 
     """
 
@@ -120,36 +120,36 @@ def fill_body(mail, data):
         mail.add_2_msg(line)
 
 
-def node_health(base_url, cfg, args_array):
+def node_health(base_url, cfg, args):
 
     """Function:  node_health
 
     Description:  RabbitMQ Node health check.
 
     Arguments:
-        (input) base_url -> Base URL for connection to RabbitMQ node.
-        (input) cfg -> Configuration module name.
-        (input) args_array -> Array of command line options and values.
+        (input) base_url -> Base URL for connection to RabbitMQ node
+        (input) cfg -> Configuration module name
+        (input) args -> ArgParser class instance
 
     """
 
     global TAB_LEN
 
     mail = None
-    verbose = args_array.get("-w", False)
-    no_std = args_array.get("-z", False)
-    ofile = args_array.get("-o", False)
+    verbose = args.get_val("-w", def_val=False)
+    no_std = args.get_val("-z", def_val=False)
+    ofile = args.get_val("-o", def_val=None)
     results = ["Node Health Check"]
     dtg = gen_libs.get_date() + " " + gen_libs.get_time()
     results.append(("\tAsOf: %s" % (dtg)).expandtabs(TAB_LEN))
     data = requests.get(base_url + "healthchecks/node",
                         auth=(cfg.user, cfg.japd)).json()
-    mode = "a" if args_array.get("-a", False) else "w"
+    mode = "a" if args.get_val("-a", def_val=False) else "w"
 
-    if args_array.get("-t", False):
+    if args.get_val("-t", def_val=False):
         mail = gen_class.setup_mail(
-            args_array.get("-t"),
-            subj=args_array.get("-s", "Node Health Check"))
+            args.get_val("-t"),
+            subj=args.get_val("-s", def_val="Node Health Check"))
 
     if data["status"] != "ok":
         results.append(("\tError detected in node").expandtabs(TAB_LEN))
@@ -172,7 +172,7 @@ def node_health(base_url, cfg, args_array):
         gen_libs.print_list(results, mode=mode, ofile=ofile)
 
 
-def run_program(args_array, func_dict):
+def run_program(args, func_dict):
 
     """Function:  run_program
 
@@ -180,19 +180,18 @@ def run_program(args_array, func_dict):
         Set a program lock to prevent other instantiations from running.
 
     Arguments:
-        (input) args_array -> Dict of command line options and values.
-        (input) func_dict -> Dict of function calls and associated options.
+        (input) args -> ArgParser class instance
+        (input) func_dict -> Dict of function calls and associated options
 
     """
 
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
-    cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
     base_url = create_base(cfg)
 
-    # Intersect args_array & func_dict to find which functions to call.
-    for opt in set(args_array.keys()) & set(func_dict.keys()):
-        func_dict[opt](base_url, cfg, args_array)
+    # Intersect args.args_array & func_dict to find which functions to call.
+    for opt in set(args.args_array.keys()) & set(func_dict.keys()):
+        func_dict[opt](base_url, cfg, args)
 
 
 def main(**kwargs):
@@ -239,16 +238,10 @@ def main(**kwargs):
        and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list) \
        and args.arg_cond_req(opt_con_req=opt_con_req_list):
 
-#       and not arg_parser.arg_require(args_array, opt_req_list) \
-#       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-#       and not arg_parser.arg_file_chk(args_array, file_chk_list,
-#                                       file_crt_list) \
-#       and arg_parser.arg_cond_req(args_array, opt_con_req_list):
-
         try:
             prog_lock = gen_class.ProgramLock(
                 cmdline.argv, args.get_val("-y", def_val=""))
-            run_program(args_array, func_dict)
+            run_program(args, func_dict)
             del prog_lock
 
         except gen_class.SingleInstanceException:
