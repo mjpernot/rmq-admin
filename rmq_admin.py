@@ -61,9 +61,9 @@ import sys
 import requests
 
 # Local
-import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
+import rabbit_lib.rabbitmq_class as rabbitmq_class
 import version
 
 __version__ = version.__version__
@@ -171,8 +171,8 @@ def run_program(args, func_dict):
 
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
-    rmq = gen_class.RabbitMQAdmin(
-        cfg.user, cfg.japd, host=cfg.host, port=cfg.m_port. scheme=cfg.scheme)
+    rmq = rabbitmq_class.RabbitMQAdmin(
+        cfg.user, cfg.japd, host=cfg.host, port=cfg.m_port, scheme=cfg.scheme)
 
     # Intersect args.args_array & func_dict to find which functions to call.
     for opt in set(args.args_array.keys()) & set(func_dict.keys()):

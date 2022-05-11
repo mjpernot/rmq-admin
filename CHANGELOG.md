@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [0.0.2] - 2021-10-14
 ### Changed
+- run_program: Replaced create_base call with gen_class.RabbitMQAdmin class instance.
 - config/rabbitmq.py.TEMPLATE: Added new configuration options.
 - main, run_program, node_health: Replaced processing of args_array with the gen_class.ArgParser class.
 
