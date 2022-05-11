@@ -6,7 +6,6 @@
 
 echo ""
 echo "Unit test:  rmq_admin.py"
-test/unit/rmq_admin/create_base.py
 test/unit/rmq_admin/fill_body.py
 test/unit/rmq_admin/help_message.py
 test/unit/rmq_admin/main.py
