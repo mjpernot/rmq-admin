@@ -69,7 +69,7 @@ import version
 __version__ = version.__version__
 
 # Global
-TAB_LEN = 4
+#TAB_LEN = 4
 
 
 def help_message():
@@ -86,74 +86,66 @@ def help_message():
     print(__doc__)
 
 
-def fill_body(mail, data):
-
-    """Function:  fill_body
-
-    Description:  Add data to mail body from data list.
-
-    Arguments:
-        (input) mail -> Mail class instance
-        (input) data -> List of data strings
-
-    """
-
-    data = list(data)
-
-    for line in data:
-        mail.add_2_msg(line)
-
-
-def node_health(base_url, cfg, args):
+def node_health(rmq, args):
 
     """Function:  node_health
 
     Description:  RabbitMQ Node health check.
 
     Arguments:
-        (input) base_url -> Base URL for connection to RabbitMQ node
-        (input) cfg -> Configuration module name
+        (input) rmq -> RabbitMQAdmin class instance
         (input) args -> ArgParser class instance
 
     """
 
-    global TAB_LEN
+#    global TAB_LEN
 
     mail = None
     verbose = args.get_val("-w", def_val=False)
     no_std = args.get_val("-z", def_val=False)
     ofile = args.get_val("-o", def_val=None)
-    results = ["Node Health Check"]
-    dtg = gen_libs.get_date() + " " + gen_libs.get_time()
-    results.append(("\tAsOf: %s" % (dtg)).expandtabs(TAB_LEN))
-    data = requests.get(base_url + "healthchecks/node",
-                        auth=(cfg.user, cfg.japd)).json()
     mode = "a" if args.get_val("-a", def_val=False) else "w"
+    dtg = gen_libs.get_date() + " " + gen_libs.get_time()
+
+    results = {"Type:" "Node Health Check", "AsOf": dtg}
+#    results = ["Node Health Check"]
+#    results.append(("\tAsOf: %s" % (dtg)).expandtabs(TAB_LEN))
+
+    data = rmq.get(
+        url=rmq.url + "/api/healthchecks/node", headers=rmq.headers,
+        auth=rmq.auth)
+#    data = requests.get(base_url + "healthchecks/node",
+#                        auth=(cfg.user, cfg.japd)).json()
+
 
     if args.get_val("-t", def_val=False):
         mail = gen_class.setup_mail(
             args.get_val("-t"),
             subj=args.get_val("-s", def_val="Node Health Check"))
 
+    results["Status"] = data["status"]
+
     if data["status"] != "ok":
-        results.append(("\tError detected in node").expandtabs(TAB_LEN))
-
-        results.append(("\tStatus: %s" % (data["status"])).expandtabs(TAB_LEN))
-        results.append(
-            ("\tMessage: %s" % (data["reason"])).expandtabs(TAB_LEN))
-
-    else:
-        results.append(("\tStatus: %s" % (data["status"])).expandtabs(TAB_LEN))
+        results["Message"] = data["reason"]
+#        results.append(("\tError detected in node").expandtabs(TAB_LEN))
+#        results.append(("\tStatus: %s" % (data["status"])).expandtabs(TAB_LEN))
+#        results.append(
+#            ("\tMessage: %s" % (data["reason"])).expandtabs(TAB_LEN))
+#
+#    else:
+#        results.append(("\tStatus: %s" % (data["status"])).expandtabs(TAB_LEN))
 
     if (data["status"] != "ok" and not no_std) or (verbose and not no_std):
-        gen_libs.print_list(results)
+        gen_libs.print_dict(results)
+#        gen_libs.print_list(results)
 
     if mail and (data["status"] != "ok" or verbose):
-        fill_body(mail, results)
+        mail.add_2_msg(results)
         mail.send_mail()
 
     if ofile and (data["status"] != "ok" or verbose):
-        gen_libs.print_list(results, mode=mode, ofile=ofile)
+        gen_libs.print_dict(results, ofile=ofile, mode=mode)
+#        gen_libs.print_list(results, mode=mode, ofile=ofile)
 
 
 def run_program(args, func_dict):
@@ -176,7 +168,7 @@ def run_program(args, func_dict):
 
     # Intersect args.args_array & func_dict to find which functions to call.
     for opt in set(args.args_array.keys()) & set(func_dict.keys()):
-        func_dict[opt](rmq, cfg, args)
+        func_dict[opt](rmq, args)
 
 
 def main(**kwargs):
