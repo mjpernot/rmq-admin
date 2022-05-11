@@ -274,27 +274,26 @@ class UnitTest(unittest.TestCase):
         self.get = GetTest(self.data)
         self.get2 = GetTest(self.data2)
         self.file = "test/unit/rmq_admin/tmp/outfile.txt"
-# STOPPED HERE
-#        self.args_array = {}
-#        self.args_array2 = {"-z": True}
-#        self.args_array3 = {"-w": True}
-#        self.args_array4 = {"-w": True, "-z": True}
-#        self.args_array5 = {"-o": self.file, "-z": True}
-#        self.args_array6 = {"-o": self.file, "-w": True, "-z": True}
-#        self.args_array7 = {"-o": self.file, "-a": True, "-z": True}
-#        self.args_array8 = {"-o": self.file, "-a": True, "-w": True,
-#                            "-z": True}
-#        self.args_array9 = {"-t": "toaddr", "-z": True}
-#        self.args_array10 = {"-t": "toaddr", "-w": True, "-z": True}
-#        self.args_array11 = {"-t": "toaddr"}
-#        self.args_array12 = {"-t": "toaddr", "-w": True}
-#        self.args_array13 = {"-t": "toaddr", "-o": self.file, "-z": True}
-#        self.args_array14 = {"-t": "toaddr", "-o": self.file, "-w": True,
-#                             "-z": True}
-#        self.args_array15 = {"-o": self.file}
-#        self.args_array16 = {"-o": self.file, "-w": True}
-#        self.args_array17 = {"-t": "toaddr", "-o": self.file}
-#        self.args_array18 = {"-t": "toaddr", "-o": self.file, "-w": True}
+        self.args_array = {}
+        self.args_array2 = {"-z": True}
+        self.args_array3 = {"-w": True}
+        self.args_array4 = {"-w": True, "-z": True}
+        self.args_array5 = {"-o": self.file, "-z": True}
+        self.args_array6 = {"-o": self.file, "-w": True, "-z": True}
+        self.args_array7 = {"-o": self.file, "-a": True, "-z": True}
+        self.args_array8 = {"-o": self.file, "-a": True, "-w": True,
+                            "-z": True}
+        self.args_array9 = {"-t": "toaddr", "-z": True}
+        self.args_array10 = {"-t": "toaddr", "-w": True, "-z": True}
+        self.args_array11 = {"-t": "toaddr"}
+        self.args_array12 = {"-t": "toaddr", "-w": True}
+        self.args_array13 = {"-t": "toaddr", "-o": self.file, "-z": True}
+        self.args_array14 = {"-t": "toaddr", "-o": self.file, "-w": True,
+                             "-z": True}
+        self.args_array15 = {"-o": self.file}
+        self.args_array16 = {"-o": self.file, "-w": True}
+        self.args_array17 = {"-t": "toaddr", "-o": self.file}
+        self.args_array18 = {"-t": "toaddr", "-o": self.file, "-w": True}
         self.date = "2020-07-24"
         self.time = "10:20:10"
         self.header = "Node Health Check"
@@ -322,13 +321,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array18
+
         mock_get.return_value = self.get
         mock_date.return_value = self.date
         mock_time.return_value = self.time
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            rmq_admin.node_health(self.base_url, self.cfg, self.args_array18)
+            rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(linecnt(self.file), 3)
         self.assertEqual(self.mail.msg, self.results2)
@@ -346,12 +347,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array17
+
         mock_get.return_value = self.get
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array17)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertFalse(os.path.isfile(self.file))
         self.assertEqual(self.mail.msg, self.results)
@@ -367,11 +370,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array16
+
         mock_get.return_value = self.get
 
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                                   self.args_array16))
+            self.assertFalse(
+                rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
         self.assertEqual(linecnt(self.file), 3)
 
@@ -386,10 +391,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array15
+
         mock_get.return_value = self.get
 
-        self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                               self.args_array15))
+        self.assertFalse(
+            rmq_admin.node_health(self.base_url, self.cfg, self.args))
         self.assertFalse(os.path.isfile(self.file))
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
@@ -407,12 +414,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array14
+
         mock_get.return_value = self.get
         mock_date.return_value = self.date
         mock_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array14)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(linecnt(self.file), 3)
         self.assertEqual(self.mail.msg, self.results2)
@@ -430,12 +439,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array13
+
         mock_get.return_value = self.get
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array13)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertFalse(os.path.isfile(self.file))
         self.assertEqual(self.mail.msg, self.results)
@@ -453,14 +464,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array12
+
         mock_get.return_value = self.get
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                                   self.args_array12))
+            self.assertFalse(
+                rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
         self.assertEqual(self.mail.msg, self.results2)
 
@@ -477,13 +490,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array11
+
         mock_get.return_value = self.get
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                               self.args_array11))
+        self.assertFalse(
+            rmq_admin.node_health(self.base_url, self.cfg, self.args))
         self.assertEqual(self.mail.msg, self.results)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
@@ -499,12 +514,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array10
+
         mock_get.return_value = self.get2
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array10)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(self.mail.msg, self.results3)
 
@@ -521,12 +538,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array9
+
         mock_get.return_value = self.get2
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array9)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(self.mail.msg, self.results3)
 
@@ -543,12 +562,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array10
+
         mock_get.return_value = self.get
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array10)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(self.mail.msg, self.results2)
 
@@ -563,9 +584,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array9
+
         mock_get.return_value = self.get
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array9)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -580,10 +603,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array8
+
         mock_get.return_value = self.get
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array8)
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array8)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(linecnt(self.file), 6)
 
@@ -598,10 +623,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array7
+
         mock_get.return_value = self.get2
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array7)
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array7)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(linecnt(self.file), 10)
 
@@ -616,9 +643,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array6
+
         mock_get.return_value = self.get2
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array6)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(linecnt(self.file), 5)
 
@@ -633,9 +662,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array5
+
         mock_get.return_value = self.get2
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array5)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(linecnt(self.file), 5)
 
@@ -650,9 +681,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array6
+
         mock_get.return_value = self.get
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array6)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertEqual(linecnt(self.file), 3)
 
@@ -667,9 +700,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array5
+
         mock_get.return_value = self.get
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args_array5)
+        rmq_admin.node_health(self.base_url, self.cfg, self.args)
 
         self.assertFalse(os.path.isfile(self.file))
 
@@ -684,10 +719,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array2
+
         mock_get.return_value = self.get2
 
-        self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                               self.args_array2))
+        self.assertFalse(
+            rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
     @mock.patch("rmq_admin.requests.get")
     def test_no_err_verb_suppr(self, mock_get):
@@ -700,10 +737,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array4
+
         mock_get.return_value = self.get
 
-        self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                               self.args_array4))
+        self.assertFalse(
+            rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
     @mock.patch("rmq_admin.requests.get")
     def test_errors_verbose(self, mock_get):
@@ -716,11 +755,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array3
+
         mock_get.return_value = self.get2
 
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                                   self.args_array3))
+            self.assertFalse(
+                rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
     @mock.patch("rmq_admin.requests.get")
     def test_errors(self, mock_get):
@@ -733,11 +774,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array
+
         mock_get.return_value = self.get2
 
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                                   self.args_array))
+            self.assertFalse(
+                rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
     @mock.patch("rmq_admin.requests.get")
     def test_no_errors_verbose(self, mock_get):
@@ -750,11 +793,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array3
+
         mock_get.return_value = self.get
 
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                                   self.args_array3))
+            self.assertFalse(
+                rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
     @mock.patch("rmq_admin.requests.get")
     def test_no_errors(self, mock_get):
@@ -767,10 +812,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array
+
         mock_get.return_value = self.get
 
-        self.assertFalse(rmq_admin.node_health(self.base_url, self.cfg,
-                                               self.args_array))
+        self.assertFalse(
+            rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
     def tearDown(self):
 
