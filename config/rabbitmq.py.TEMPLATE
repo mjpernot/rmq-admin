@@ -19,4 +19,6 @@ to_line = None
 port = 5672
 # RabbitMQ management port, default is 15672.
 m_port = 15672
+# Scheme - type of connection: http | https
+scheme = "https"
 
