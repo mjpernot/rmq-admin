@@ -114,6 +114,7 @@ class CfgTest(object):
         self.japd = None
         self.host = "hostname"
         self.m_port = 15672
+        self.scheme = "https"
 
 
 class UnitTest(unittest.TestCase):
@@ -140,15 +141,13 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args = ArgParser()
-        http = "http"
         self.cfg = CfgTest()
         self.func_dict = {"-N": node_health}
-        self.base_url = \
-            http + "://" + self.cfg.host + ":" + str(self.cfg.m_port) + "/api/"
+        self.rmq = "RMQ_Class_Instance"
 
-    @mock.patch("rmq_admin.create_base")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin")
     @mock.patch("rmq_admin.gen_libs.load_module")
-    def test_func_call(self, mock_cfg, mock_base):
+    def test_func_call(self, mock_cfg, mock_rmq):
 
         """Function:  test_func_call
 
@@ -161,13 +160,13 @@ class UnitTest(unittest.TestCase):
         self.args.args_array["-N"] = True
 
         mock_cfg.return_value = self.cfg
-        mock_base.return_value = self.base_url
+        mock_rmq.return_value = self.rmq
 
         self.assertFalse(rmq_admin.run_program(self.args, self.func_dict))
 
-    @mock.patch("rmq_admin.create_base")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin")
     @mock.patch("rmq_admin.gen_libs.load_module")
-    def test_no_func(self, mock_cfg, mock_base):
+    def test_no_func(self, mock_cfg, mock_rmq):
 
         """Function:  test_no_func
 
@@ -178,7 +177,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = self.cfg
-        mock_base.return_value = self.base_url
+        mock_rmq.return_value = self.rmq
 
         self.assertFalse(rmq_admin.run_program(self.args, self.func_dict))
 
