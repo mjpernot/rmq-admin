@@ -86,22 +86,6 @@ def help_message():
     print(__doc__)
 
 
-def create_base(cfg):
-
-    """Function:  create_base
-
-    Description:  Create base url to connect to RabbitMQ node.
-
-    Arguments:
-        (input) cfg -> Configuration module name
-
-    """
-
-    http = "http"
-
-    return http + "://" + cfg.host + ":" + str(cfg.m_port) + "/api/"
-
-
 def fill_body(mail, data):
 
     """Function:  fill_body
@@ -187,11 +171,12 @@ def run_program(args, func_dict):
 
     func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
-    base_url = create_base(cfg)
+    rmq = gen_class.RabbitMQAdmin(
+        cfg.user, cfg.japd, host=cfg.host, port=cfg.m_port. scheme=cfg.scheme)
 
     # Intersect args.args_array & func_dict to find which functions to call.
     for opt in set(args.args_array.keys()) & set(func_dict.keys()):
-        func_dict[opt](base_url, cfg, args)
+        func_dict[opt](rmq, cfg, args)
 
 
 def main(**kwargs):

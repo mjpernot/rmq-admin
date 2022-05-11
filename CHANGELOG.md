@@ -9,6 +9,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - config/rabbitmq.py.TEMPLATE: Added new configuration options.
 - main, run_program, node_health: Replaced processing of args_array with the gen_class.ArgParser class.
 
+### Removed
+- create_base
 
 
 ## [0.0.1] - 2020-07-22
