@@ -31,6 +31,7 @@ import mock
 sys.path.append(os.getcwd())
 import rmq_admin
 import lib.gen_libs as gen_libs
+import rabbit_lib.rabbitmq_class as rabbitmq_class
 import version
 
 __version__ = version.__version__
@@ -111,6 +112,7 @@ class CfgTest(object):
         self.japd = None
         self.host = "hostname"
         self.m_port = 15672
+        self.scheme = "https"
 
 
 class MailTest(object):
@@ -181,44 +183,6 @@ class MailTest(object):
         pass
 
 
-class GetTest(object):
-
-    """Class:  GetTest
-
-    Description:  Class which is a representation of a request call.
-
-    Methods:
-        __init__
-        json
-
-    """
-
-    def __init__(self, data):
-
-        """Method:  __init__
-
-        Description:  Initialization of an instance class.
-
-        Arguments:
-            (input) data
-
-        """
-
-        self.data = data
-
-    def json(self):
-
-        """Method:  json
-
-        Description:  Return status of request call.
-
-        Arguments:
-
-        """
-
-        return self.data
-
-
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -265,14 +229,18 @@ class UnitTest(unittest.TestCase):
 
         """
 
+
         self.args = ArgParser()
         self.mail = MailTest("toaddr")
         self.cfg = CfgTest()
-        self.base_url = "http://localhost:15672/api/"
+
+        self.rmq = rabbitmq_class.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
+
+#        self.base_url = "http://localhost:15672/api/"
         self.data = {'status': 'ok'}
         self.data2 = {'status': 'failed', 'reason': 'reason for failure'}
-        self.get = GetTest(self.data)
-        self.get2 = GetTest(self.data2)
+#        self.get = GetTest(self.data)
+#        self.get2 = GetTest(self.data2)
         self.file = "test/unit/rmq_admin/tmp/outfile.txt"
         self.args_array = {}
         self.args_array2 = {"-z": True}
@@ -294,23 +262,24 @@ class UnitTest(unittest.TestCase):
         self.args_array16 = {"-o": self.file, "-w": True}
         self.args_array17 = {"-t": "toaddr", "-o": self.file}
         self.args_array18 = {"-t": "toaddr", "-o": self.file, "-w": True}
-        self.date = "2020-07-24"
-        self.time = "10:20:10"
-        self.header = "Node Health Check"
-        self.subhdr = "    AsOf: " + self.date + " " + self.time
-        self.entry = "    Status: ok"
-        self.entry2 = "    Error detected in node"
-        self.entry3 = "    Status: failed"
-        self.entry4 = "    Message: reason for failure"
-        self.results = ""
-        self.results2 = self.header + self.subhdr + self.entry
-        self.results3 = \
-            self.header + self.subhdr + self.entry2 + self.entry3 + self.entry4
+
+#        self.date = "2020-07-24"
+#        self.time = "10:20:10"
+#        self.header = "Node Health Check"
+#        self.subhdr = "    AsOf: " + self.date + " " + self.time
+#        self.entry = "    Status: ok"
+#        self.entry2 = "    Error detected in node"
+#        self.entry3 = "    Status: failed"
+#        self.entry4 = "    Message: reason for failure"
+#        self.results = ""
+#        self.results2 = self.header + self.subhdr + self.entry
+#        self.results3 = \
+#            self.header + self.subhdr + self.entry2 + self.entry3 + self.entry4
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs.get_date")
     @mock.patch("rmq_admin.gen_libs.get_time")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_verb_all(self, mock_get, mock_time, mock_date, mock_mail):
 
         """Function:  test_no_err_verb_all
@@ -323,20 +292,20 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array18
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
         mock_date.return_value = self.date
         mock_time.return_value = self.time
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            rmq_admin.node_health(self.base_url, self.cfg, self.args)
+            rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(linecnt(self.file), 3)
         self.assertEqual(self.mail.msg, self.results2)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_all(self, mock_get, mock_lib, mock_mail):
 
         """Function:  test_no_err_all
@@ -349,17 +318,17 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array17
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertFalse(os.path.isfile(self.file))
         self.assertEqual(self.mail.msg, self.results)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_verb_std_file(self, mock_get):
 
         """Function:  test_no_err_verb_std_file
@@ -372,15 +341,15 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array16
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                rmq_admin.node_health(self.base_url, self.cfg, self.args))
+                rmq_admin.node_health(self.rmq, self.args))
 
         self.assertEqual(linecnt(self.file), 3)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_std_file(self, mock_get):
 
         """Function:  test_no_err_std_file
@@ -393,16 +362,16 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array15
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
         self.assertFalse(
-            rmq_admin.node_health(self.base_url, self.cfg, self.args))
+            rmq_admin.node_health(self.rmq, self.args))
         self.assertFalse(os.path.isfile(self.file))
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs.get_date")
     @mock.patch("rmq_admin.gen_libs.get_time")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_verb_file_mail(self, mock_get, mock_time, mock_date,
                                    mock_mail):
 
@@ -416,19 +385,19 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array14
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
         mock_date.return_value = self.date
         mock_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(linecnt(self.file), 3)
         self.assertEqual(self.mail.msg, self.results2)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_file_mail(self, mock_get, mock_lib, mock_mail):
 
         """Function:  test_no_err_file_mail
@@ -441,19 +410,19 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array13
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertFalse(os.path.isfile(self.file))
         self.assertEqual(self.mail.msg, self.results)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_verb_std_mail(self, mock_get, mock_lib, mock_mail):
 
         """Function:  test_no_errors_verbose
@@ -466,20 +435,20 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array12
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                rmq_admin.node_health(self.base_url, self.cfg, self.args))
+                rmq_admin.node_health(self.rmq, self.args))
 
         self.assertEqual(self.mail.msg, self.results2)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_std_mail(self, mock_get, mock_lib, mock_mail):
 
         """Function:  test_no_err_std_mail
@@ -492,18 +461,18 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array11
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
         self.assertFalse(
-            rmq_admin.node_health(self.base_url, self.cfg, self.args))
+            rmq_admin.node_health(self.rmq, self.args))
         self.assertEqual(self.mail.msg, self.results)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_err_verb_mail(self, mock_get, mock_lib, mock_mail):
 
         """Function:  test_err_verb_mail
@@ -516,18 +485,18 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array10
 
-        mock_get.return_value = self.get2
+        mock_get.return_value = self.data2
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(self.mail.msg, self.results3)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_err_mail(self, mock_get, mock_lib, mock_mail):
 
         """Function:  test_err_mail
@@ -540,18 +509,18 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array9
 
-        mock_get.return_value = self.get2
+        mock_get.return_value = self.data2
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(self.mail.msg, self.results3)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     @mock.patch("rmq_admin.gen_libs")
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_verb_mail(self, mock_get, mock_lib, mock_mail):
 
         """Function:  test_no_err_verb_mail
@@ -564,16 +533,16 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array10
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
         mock_lib.get_date.return_value = self.date
         mock_lib.get_time.return_value = self.time
         mock_mail.return_value = self.mail
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(self.mail.msg, self.results2)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_mail(self, mock_get):
 
         """Function:  test_no_err_mail
@@ -586,13 +555,13 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array9
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(self.mail.msg, self.results)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_append_verb_file(self, mock_get):
 
         """Function:  test_append_verb_file
@@ -605,14 +574,14 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array8
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(linecnt(self.file), 6)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_append_file(self, mock_get):
 
         """Function:  test_append_file
@@ -625,14 +594,14 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array7
 
-        mock_get.return_value = self.get2
+        mock_get.return_value = self.data2
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(linecnt(self.file), 10)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_err_verb_file(self, mock_get):
 
         """Function:  test_err_verb_file
@@ -645,13 +614,13 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array6
 
-        mock_get.return_value = self.get2
+        mock_get.return_value = self.data2
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(linecnt(self.file), 5)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_err_file(self, mock_get):
 
         """Function:  test_err_file
@@ -664,13 +633,13 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array5
 
-        mock_get.return_value = self.get2
+        mock_get.return_value = self.data2
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(linecnt(self.file), 5)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_verb_file(self, mock_get):
 
         """Function:  test_no_err_verb_file
@@ -683,13 +652,13 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array6
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertEqual(linecnt(self.file), 3)
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_file(self, mock_get):
 
         """Function:  test_no_err_file
@@ -702,13 +671,13 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array5
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
-        rmq_admin.node_health(self.base_url, self.cfg, self.args)
+        rmq_admin.node_health(self.rmq, self.args)
 
         self.assertFalse(os.path.isfile(self.file))
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_errors_suppr(self, mock_get):
 
         """Function:  test_errors_suppr
@@ -721,12 +690,12 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array2
 
-        mock_get.return_value = self.get2
+        mock_get.return_value = self.data2
 
         self.assertFalse(
-            rmq_admin.node_health(self.base_url, self.cfg, self.args))
+            rmq_admin.node_health(self.rmq, self.args))
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_err_verb_suppr(self, mock_get):
 
         """Function:  test_no_err_verb_suppr
@@ -739,12 +708,12 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array4
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
         self.assertFalse(
-            rmq_admin.node_health(self.base_url, self.cfg, self.args))
+            rmq_admin.node_health(self.rmq, self.args))
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_errors_verbose(self, mock_get):
 
         """Function:  test_errors_verbose
@@ -763,7 +732,7 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(
                 rmq_admin.node_health(self.base_url, self.cfg, self.args))
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_errors(self, mock_get):
 
         """Function:  test_errors
@@ -776,13 +745,13 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array
 
-        mock_get.return_value = self.get2
+        mock_get.return_value = self.data2
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                rmq_admin.node_health(self.base_url, self.cfg, self.args))
+                rmq_admin.node_health(self.rmq, self.args))
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_errors_verbose(self, mock_get):
 
         """Function:  test_no_errors_verbose
@@ -795,13 +764,13 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array3
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
         with gen_libs.no_std_out():
             self.assertFalse(
-                rmq_admin.node_health(self.base_url, self.cfg, self.args))
+                rmq_admin.node_health(self.rmq, self.args))
 
-    @mock.patch("rmq_admin.requests.get")
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_errors(self, mock_get):
 
         """Function:  test_no_errors
@@ -814,10 +783,10 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array
 
-        mock_get.return_value = self.get
+        mock_get.return_value = self.data
 
         self.assertFalse(
-            rmq_admin.node_health(self.base_url, self.cfg, self.args))
+            rmq_admin.node_health(self.rmq, self.args))
 
     def tearDown(self):
 

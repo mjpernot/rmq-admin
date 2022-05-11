@@ -107,7 +107,7 @@ def node_health(rmq, args):
     mode = "a" if args.get_val("-a", def_val=False) else "w"
     dtg = gen_libs.get_date() + " " + gen_libs.get_time()
 
-    results = {"Type:" "Node Health Check", "AsOf": dtg}
+    results = {"Type": "Node Health Check", "AsOf": dtg}
 #    results = ["Node Health Check"]
 #    results.append(("\tAsOf: %s" % (dtg)).expandtabs(TAB_LEN))
 
@@ -144,7 +144,7 @@ def node_health(rmq, args):
         mail.send_mail()
 
     if ofile and (data["status"] != "ok" or verbose):
-        gen_libs.print_dict(results, ofile=ofile, mode=mode)
+        gen_libs.print_dict(results, ofile=ofile, mode=mode, no_std=True)
 #        gen_libs.print_list(results, mode=mode, ofile=ofile)
 
 
