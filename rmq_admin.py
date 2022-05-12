@@ -98,54 +98,36 @@ def node_health(rmq, args):
 
     """
 
-#    global TAB_LEN
-
     mail = None
     verbose = args.get_val("-w", def_val=False)
     no_std = args.get_val("-z", def_val=False)
     ofile = args.get_val("-o", def_val=None)
     mode = "a" if args.get_val("-a", def_val=False) else "w"
     dtg = gen_libs.get_date() + " " + gen_libs.get_time()
-
     results = {"Type": "Node Health Check", "AsOf": dtg}
-#    results = ["Node Health Check"]
-#    results.append(("\tAsOf: %s" % (dtg)).expandtabs(TAB_LEN))
-
     data = rmq.get(
         url=rmq.url + "/api/healthchecks/node", headers=rmq.headers,
         auth=rmq.auth)
-#    data = requests.get(base_url + "healthchecks/node",
-#                        auth=(cfg.user, cfg.japd)).json()
-
+    results["Status"] = data["status"]
 
     if args.get_val("-t", def_val=False):
         mail = gen_class.setup_mail(
             args.get_val("-t"),
             subj=args.get_val("-s", def_val="Node Health Check"))
 
-    results["Status"] = data["status"]
-
     if data["status"] != "ok":
         results["Message"] = data["reason"]
-#        results.append(("\tError detected in node").expandtabs(TAB_LEN))
-#        results.append(("\tStatus: %s" % (data["status"])).expandtabs(TAB_LEN))
-#        results.append(
-#            ("\tMessage: %s" % (data["reason"])).expandtabs(TAB_LEN))
-#
-#    else:
-#        results.append(("\tStatus: %s" % (data["status"])).expandtabs(TAB_LEN))
 
     if (data["status"] != "ok" and not no_std) or (verbose and not no_std):
-        gen_libs.print_dict(results)
-#        gen_libs.print_list(results)
+        gen_libs.print_dict(results, json_fmt=True)
 
     if mail and (data["status"] != "ok" or verbose):
         mail.add_2_msg(results)
         mail.send_mail()
 
     if ofile and (data["status"] != "ok" or verbose):
-        gen_libs.print_dict(results, ofile=ofile, mode=mode, no_std=True)
-#        gen_libs.print_list(results, mode=mode, ofile=ofile)
+        gen_libs.print_dict(
+            results, ofile=ofile, mode=mode, json_fmt=True, no_std=True)
 
 
 def run_program(args, func_dict):
