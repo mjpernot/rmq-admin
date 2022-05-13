@@ -8,18 +8,28 @@
     Usage:
         rmq_admin.py -c config_file -d dir_path
             {-N [-w] [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
+                [-o path/filename [-a]] |
+             -Q [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
                 [-o path/filename [-a]]}
             [-y flavor_id]
             [-v | -h]
 
     Arguments:
-        -c config_file => RabbitMQ configuration file.
-            Required argument.
-        -d dir_path => Directory path for option '-c'.
-            Required argument.
+        -c config_file => RabbitMQ configuration file. Required argument.
+        -d dir_path => Directory path for option '-c'. Required argument.
 
-        -N -> Node health check.
+        -N -> Node health check
             -w -> Print results of check for all returns.
+            -z => Suppress standard out.
+            -t to_email to_email2 => Enables emailing capability for an option
+                if the option allows it.  Sends output to one or more email
+                addresses.
+                -s subject_line => Subject line of email.  If none is provided
+                    then a default one will be used.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to output file.
+
+        -Q -> List queues
             -z => Suppress standard out.
             -t to_email to_email2 => Enables emailing capability for an option
                 if the option allows it.  Sends output to one or more email
@@ -44,7 +54,7 @@
             # RabbitMQ management port, default is 15672
             m_port = 15672
             # RabbitMQ listening port, default is 5672.
-            q_port = 5672
+            port = 5672
 
     Example:
         rmq_admin.py -c rabbitmq -d config -N
@@ -68,9 +78,6 @@ import version
 
 __version__ = version.__version__
 
-# Global
-#TAB_LEN = 4
-
 
 def help_message():
 
@@ -84,6 +91,23 @@ def help_message():
     """
 
     print(__doc__)
+
+
+def list_queues(rmq, args):
+
+    """Function:  list_queues
+
+    Description:  Return list of queues in the RabbitMQ node.
+
+    Arguments:
+        (input) rmq -> RabbitMQAdmin class instance
+        (input) args -> ArgParser class instance
+
+    """
+
+    data = rmq.list_queues()
+
+    data_out(data, args, def_subj="List Queues")
 
 
 def node_health(rmq, args):
@@ -178,7 +202,7 @@ def main(**kwargs):
     dir_chk_list = ["-d"]
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
-    func_dict = {"-N": node_health}
+    func_dict = {"-N": node_health, "-Q": list_queues}
     opt_con_req_list = {"-s": ["-t"]}
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]

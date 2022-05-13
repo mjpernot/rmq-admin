@@ -5,6 +5,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [0.0.2] - 2021-10-14
+- Added gen_class.RabbitMQAdmin class to handle RabbitMQ administration commands.
+- Add option to list queues.
+
+### Added
+
 ### Changed
 - node_health: Replace current api call with RabbitMQAdmin class, changed output from list to dictionary format, removed fill_body call.
 - run_program: Replaced create_base call with gen_class.RabbitMQAdmin class instance.
