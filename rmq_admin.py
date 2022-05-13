@@ -93,6 +93,10 @@ def help_message():
     print(__doc__)
 
 
+def data_out(data, args, def_subj="NoSubjectLine"):
+    pass
+
+
 def list_queues(rmq, args):
 
     """Function:  list_queues
