@@ -9,6 +9,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Add option to list queues.
 
 ### Added
+- data_out: Outputs the data in a variety of formats and media.
+- list_queues: Return list of queues in the RabbitMQ node.
 
 ### Changed
 - node_health: Replace current api call with RabbitMQAdmin class, changed output from list to dictionary format, removed fill_body call.

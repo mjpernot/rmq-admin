@@ -94,7 +94,28 @@ def help_message():
 
 
 def data_out(data, args, def_subj="NoSubjectLine"):
-    pass
+
+    """Function:  data_out
+
+    Description:  Outputs the data in a variety of formats and media.
+
+    Arguments:
+        (input) data -> Data results from RabbitMQ command
+        (input) args -> ArgParser class instance
+        (input) def_subj -> Default subject line for email if not provided
+
+    """
+
+    if args.get_val("-t", def_val=False):
+        mail = gen_class.setup_mail(
+            args.get_val("-t"), subj=args.get_val("-s", def_val=def_subj))
+        mail.add_2_msg(data)
+        mail.send_mail()
+
+    gen_libs.print_dict(
+        data, ofile=args.get_val("-o", def_val=None),
+        mode="a" if args.get_val("-a", def_val=False) else "w", json_fmt=True,
+        no_std=args.get_val("-z", def_val=False))
 
 
 def list_queues(rmq, args):
