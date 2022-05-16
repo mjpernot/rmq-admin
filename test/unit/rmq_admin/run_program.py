@@ -29,6 +29,7 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import rmq_admin
+import rabbit_lib.rabbitmq_class as rabbitmq_class
 import version
 
 __version__ = version.__version__
@@ -125,8 +126,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_func_call
-        test_no_func
+        test_generic_call
+        test_default
 
     """
 
@@ -142,16 +143,36 @@ class UnitTest(unittest.TestCase):
 
         self.args = ArgParser()
         self.cfg = CfgTest()
-        self.func_dict = {"-N": node_health}
-        self.rmq = "RMQ_Class_Instance"
+        self.rmq = rabbitmq_class.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
 
+    @mock.patch("rmq_admin.generic_call", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin")
     @mock.patch("rmq_admin.gen_libs.load_module")
-    def test_func_call(self, mock_cfg, mock_rmq):
+    def test_generic_call(self, mock_cfg, mock_rmq):
 
-        """Function:  test_func_call
+        """Function:  test_generic_call
 
-        Description:  Test with function called.
+        Description:  Test with generic_call call.
+
+        Arguments:
+
+        """
+
+        self.args.args_array["-M"] = True
+
+        mock_cfg.return_value = self.cfg
+        mock_rmq.return_value = self.rmq
+
+        self.assertFalse(rmq_admin.run_program(self.args))
+
+    @mock.patch("rmq_admin.node_health", mock.Mock(return_value=True))
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin")
+    @mock.patch("rmq_admin.gen_libs.load_module")
+    def test_default(self, mock_cfg, mock_rmq):
+
+        """Function:  test_default
+
+        Description:  Test with default settings.
 
         Arguments:
 
@@ -162,24 +183,7 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.cfg
         mock_rmq.return_value = self.rmq
 
-        self.assertFalse(rmq_admin.run_program(self.args, self.func_dict))
-
-    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin")
-    @mock.patch("rmq_admin.gen_libs.load_module")
-    def test_no_func(self, mock_cfg, mock_rmq):
-
-        """Function:  test_no_func
-
-        Description:  Test with no functions selected.
-
-        Arguments:
-
-        """
-
-        mock_cfg.return_value = self.cfg
-        mock_rmq.return_value = self.rmq
-
-        self.assertFalse(rmq_admin.run_program(self.args, self.func_dict))
+        self.assertFalse(rmq_admin.run_program(self.args))
 
 
 if __name__ == "__main__":
