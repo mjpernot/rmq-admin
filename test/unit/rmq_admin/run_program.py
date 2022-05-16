@@ -34,7 +34,7 @@ import version
 __version__ = version.__version__
 
 
-def node_health(base_url, cfg, args_array):
+def node_health(rmq, args):
 
     """Function:  node_health
 
@@ -46,7 +46,7 @@ def node_health(base_url, cfg, args_array):
 
     status = True
 
-    if base_url and cfg and args_array:
+    if rmq and args:
         status = True
 
     return status
