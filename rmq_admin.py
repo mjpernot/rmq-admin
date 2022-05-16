@@ -25,7 +25,10 @@
         -E -> List exchanges
         -F -> List consumers
         -M -> List nodes
+        -P -> List permissions
         -Q -> List queues
+        -U -> List users
+        -V -> List vhosts
             -z => Suppress standard out.
             -t to_email to_email2 => Enables emailing capability for an option
                 if the option allows it.  Sends output to one or more email
