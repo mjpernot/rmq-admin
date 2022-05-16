@@ -7,7 +7,9 @@
 
     Usage:
         rmq_admin.py -c config_file -d dir_path
-            {-N [-w] [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
+            {-M [-w] [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
+                [-o path/filename [-a]] |
+             -N [-w] [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
                 [-o path/filename [-a]] |
              -Q [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
                 [-o path/filename [-a]]}
@@ -17,6 +19,16 @@
     Arguments:
         -c config_file => RabbitMQ configuration file. Required argument.
         -d dir_path => Directory path for option '-c'. Required argument.
+
+        -M -> List nodes
+            -z => Suppress standard out.
+            -t to_email to_email2 => Enables emailing capability for an option
+                if the option allows it.  Sends output to one or more email
+                addresses.
+                -s subject_line => Subject line of email.  If none is provided
+                    then a default one will be used.
+            -o directory_path/file => Directory path and file name for output.
+                -a => Append output to output file.
 
         -N -> Node health check
             -w -> Print results of check for all returns.
@@ -118,24 +130,7 @@ def data_out(data, args, def_subj="NoSubjectLine"):
         no_std=args.get_val("-z", def_val=False))
 
 
-def list_queues(rmq, args):
-
-    """Function:  list_queues
-
-    Description:  Return list of queues in the RabbitMQ node.
-
-    Arguments:
-        (input) rmq -> RabbitMQAdmin class instance
-        (input) args -> ArgParser class instance
-
-    """
-
-    data = rmq.list_queues()
-
-    data_out(data, args, def_subj="List Queues")
-
-
-def node_health(rmq, args):
+def node_health(rmq, args, **kwargs):
 
     """Function:  node_health
 
@@ -144,6 +139,9 @@ def node_health(rmq, args):
     Arguments:
         (input) rmq -> RabbitMQAdmin class instance
         (input) args -> ArgParser class instance
+        (input) kwargs:
+            method -> Name of RabbitMQAdmin class method
+            subj -> Subject line for email
 
     """
 
@@ -179,27 +177,64 @@ def node_health(rmq, args):
             results, ofile=ofile, mode=mode, json_fmt=True, no_std=True)
 
 
-def run_program(args, func_dict):
+def generic_call(rmq, args, **kwargs):
+
+    """Function:  list_nodes
+
+    Description:  Return list of nodes in a RabbitMQ cluster.
+
+    Arguments:
+        (input) rmq -> RabbitMQAdmin class instance
+        (input) args -> ArgParser class instance
+        (input) kwargs:
+            method -> Name of RabbitMQAdmin class method
+            subj -> Subject line for email
+
+    """
+
+    data = kwargs.get("method")()
+    data_out(data, args, def_subj=kwargs.get("subj", None))
+
+
+def run_program(args):
 
     """Function:  run_program
 
     Description:  Creates class instance and controls flow of the program.
         Set a program lock to prevent other instantiations from running.
 
+
     Arguments:
         (input) args -> ArgParser class instance
-        (input) func_dict -> Dict of function calls and associated options
 
     """
 
-    func_dict = dict(func_dict)
     cfg = gen_libs.load_module(args.get_val("-c"), args.get_val("-d"))
     rmq = rabbitmq_class.RabbitMQAdmin(
         cfg.user, cfg.japd, host=cfg.host, port=cfg.m_port, scheme=cfg.scheme)
 
+    # The func_dict variable will contain the key for the option selected and
+    #   each option will contain the class method name, function name to call
+    #   and the subject line for the email.  Enter "None" for subject if no
+    #   email is required.  The "generic_call" is for most calls, only if other
+    #   requirements are needed then call another function.
+    func_dict = {
+        "-M": {"method": rmq.list_nodes,
+               "subj": "List_Nodes",
+               "func": generic_call},
+        "-N": {"method": node_health,
+               "subj": "List_Nodes",
+               "func": node_health},
+        "-Q": {"method": rmq.list_queues,
+               "subj": "List_Queues",
+               "func": generic_call},
+        }
+
     # Intersect args.args_array & func_dict to find which functions to call.
     for opt in set(args.args_array.keys()) & set(func_dict.keys()):
-        func_dict[opt](rmq, args)
+        func_dict[opt]["func"](
+            rmq, args, method=func_dict[opt]["method"],
+            subj=func_dict[opt]["subj"])
 
 
 def main(**kwargs):
@@ -213,7 +248,6 @@ def main(**kwargs):
         dir_chk_list -> contains options which will be directories.
         file_chk_list -> contains the options which will have files included.
         file_crt_list -> contains options which require files to be created.
-        func_dict -> dictionary list for the function calls or other options.
         opt_con_req_list -> contains the options that require other options.
         opt_multi_list -> contains the options that will have multiple values.
         opt_req_list -> contains options that are required for the program.
@@ -227,7 +261,6 @@ def main(**kwargs):
     dir_chk_list = ["-d"]
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
-    func_dict = {"-N": node_health, "-Q": list_queues}
     opt_con_req_list = {"-s": ["-t"]}
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]
@@ -249,7 +282,7 @@ def main(**kwargs):
         try:
             prog_lock = gen_class.ProgramLock(
                 cmdline.argv, args.get_val("-y", def_val=""))
-            run_program(args, func_dict)
+            run_program(args)
             del prog_lock
 
         except gen_class.SingleInstanceException:
