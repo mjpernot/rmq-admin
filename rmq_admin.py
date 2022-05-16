@@ -7,12 +7,12 @@
 
     Usage:
         rmq_admin.py -c config_file -d dir_path
-            {-M [-w] [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
+            {
+             [-C | -D | -E | -F | -N | -P | -Q | -U | -V]
+                [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
                 [-o path/filename [-a]] |
              -N [-w] [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
                 [-o path/filename [-a]] |
-             -Q [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
-                [-o path/filename [-a]]}
             [-y flavor_id]
             [-v | -h]
 
@@ -20,7 +20,12 @@
         -c config_file => RabbitMQ configuration file. Required argument.
         -d dir_path => Directory path for option '-c'. Required argument.
 
+        -C -> List channels
+        -D -> List connections
+        -E -> List exchanges
+        -F -> List consumers
         -M -> List nodes
+        -Q -> List queues
             -z => Suppress standard out.
             -t to_email to_email2 => Enables emailing capability for an option
                 if the option allows it.  Sends output to one or more email
@@ -32,16 +37,6 @@
 
         -N -> Node health check
             -w -> Print results of check for all returns.
-            -z => Suppress standard out.
-            -t to_email to_email2 => Enables emailing capability for an option
-                if the option allows it.  Sends output to one or more email
-                addresses.
-                -s subject_line => Subject line of email.  If none is provided
-                    then a default one will be used.
-            -o directory_path/file => Directory path and file name for output.
-                -a => Append output to output file.
-
-        -Q -> List queues
             -z => Suppress standard out.
             -t to_email to_email2 => Enables emailing capability for an option
                 if the option allows it.  Sends output to one or more email
@@ -219,16 +214,36 @@ def run_program(args):
     #   email is required.  The "generic_call" is for most calls, only if other
     #   requirements are needed then call another function.
     func_dict = {
+        "-C": {"method": rmq.list_channels,
+               "subj": "List_Channels",
+               "func": generic_call},
+        "-D": {"method": rmq.list_connections,
+               "subj": "List_Connections",
+               "func": generic_call},
+        "-E": {"method": rmq.list_exchanges,
+               "subj": "List_Exchanges",
+               "func": generic_call},
+        "-F": {"method": rmq.consumers,
+               "subj": "List_Consumers",
+               "func": generic_call},
         "-M": {"method": rmq.list_nodes,
                "subj": "List_Nodes",
                "func": generic_call},
         "-N": {"method": node_health,
                "subj": "List_Nodes",
                "func": node_health},
+        "-P": {"method": rmq.list_permissions,
+               "subj": "List_Permissions",
+               "func": generic_call},
         "-Q": {"method": rmq.list_queues,
                "subj": "List_Queues",
                "func": generic_call},
-        }
+        "-U": {"method": rmq.list_users,
+               "subj": "List_Users",
+               "func": generic_call},
+        "-V": {"method": rmq.list_vhosts,
+               "subj": "List_Vhosts",
+               "func": generic_call}}
 
     # Intersect args.args_array & func_dict to find which functions to call.
     for opt in set(args.args_array.keys()) & set(func_dict.keys()):
