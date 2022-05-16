@@ -7,8 +7,8 @@
 echo ""
 echo "Unit test:  rmq_admin.py"
 test/unit/rmq_admin/data_out.py
+test/unit/rmq_admin/generic_call.py
 test/unit/rmq_admin/help_message.py
-test/unit/rmq_admin/list_queues.py
 test/unit/rmq_admin/main.py
 test/unit/rmq_admin/node_health.py
 test/unit/rmq_admin/run_program.py
