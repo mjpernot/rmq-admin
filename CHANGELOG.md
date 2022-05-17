@@ -13,7 +13,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - data_out: Outputs the data in a variety of formats and media.
 
 ### Changed
-- node_health: Replace current api call with RabbitMQAdmin class, changed output from list to dictionary format, removed fill_body call.
+- node_health: Refactored the function to use the gen_class.RabbitMQAdmin class and data_out function.
 - run_program: Replaced create_base call with gen_class.RabbitMQAdmin class instance and set up func_dict for calling functions and class methods.
 - main: Removed func_dict, this was moved to run_program function.
 - config/rabbitmq.py.TEMPLATE: Added new configuration options.

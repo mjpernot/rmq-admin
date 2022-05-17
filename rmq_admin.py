@@ -143,11 +143,7 @@ def node_health(rmq, args, **kwargs):
 
     """
 
-    mail = None
     verbose = args.get_val("-w", def_val=False)
-    no_std = args.get_val("-z", def_val=False)
-    ofile = args.get_val("-o", def_val=None)
-    mode = "a" if args.get_val("-a", def_val=False) else "w"
     dtg = gen_libs.get_date() + " " + gen_libs.get_time()
     results = {"Type": "Node Health Check", "AsOf": dtg}
     data = rmq.get(
@@ -155,24 +151,11 @@ def node_health(rmq, args, **kwargs):
         auth=rmq.auth)
     results["Status"] = data["status"]
 
-    if args.get_val("-t", def_val=False):
-        mail = gen_class.setup_mail(
-            args.get_val("-t"),
-            subj=args.get_val("-s", def_val="Node Health Check"))
-
     if data["status"] != "ok":
         results["Message"] = data["reason"]
 
-    if (data["status"] != "ok" and not no_std) or (verbose and not no_std):
-        gen_libs.print_dict(results, json_fmt=True)
-
-    if mail and (data["status"] != "ok" or verbose):
-        mail.add_2_msg(results)
-        mail.send_mail()
-
-    if ofile and (data["status"] != "ok" or verbose):
-        gen_libs.print_dict(
-            results, ofile=ofile, mode=mode, json_fmt=True, no_std=True)
+    if data["status"] != "ok" or verbose:
+        data_out(results, args, def_subj="Node_Health_Check")
 
 
 def generic_call(rmq, args, **kwargs):
@@ -226,7 +209,7 @@ def run_program(args):
         "-E": {"method": rmq.list_exchanges,
                "subj": "List_Exchanges",
                "func": generic_call},
-        "-F": {"method": rmq.consumers,
+        "-F": {"method": rmq.list_consumers,
                "subj": "List_Consumers",
                "func": generic_call},
         "-M": {"method": rmq.list_nodes,
