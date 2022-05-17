@@ -8,7 +8,7 @@
     Usage:
         rmq_admin.py -c config_file -d dir_path
             {
-             [-C | -D | -E | -F | -N | -P | -Q | -U | -V]
+             [-C | -D | -E | -F | -L | -M | -O | -P | -Q | -U | -V]
                 [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
                 [-o path/filename [-a]] |
              -N [-w] [-z] [-t ToEmail {ToEmail2 ...} {-s Subject Line}]
@@ -24,7 +24,9 @@
         -D -> List connections
         -E -> List exchanges
         -F -> List consumers
+        -L -> Get cluster name
         -M -> List nodes
+        -O -> Show overview of node
         -P -> List permissions
         -Q -> List queues
         -U -> List users
@@ -212,12 +214,18 @@ def run_program(args):
         "-F": {"method": rmq.list_consumers,
                "subj": "List_Consumers",
                "func": generic_call},
+        "-L": {"method": rmq.get_cluster_name,
+               "subj": "Cluster_Name",
+               "func": generic_call},
         "-M": {"method": rmq.list_nodes,
                "subj": "List_Nodes",
                "func": generic_call},
         "-N": {"method": node_health,
                "subj": "List_Nodes",
                "func": node_health},
+        "-O": {"method": rmq.overview,
+               "subj": "Node_OverView",
+               "func": generic_call},
         "-P": {"method": rmq.list_permissions,
                "subj": "List_Permissions",
                "func": generic_call},
