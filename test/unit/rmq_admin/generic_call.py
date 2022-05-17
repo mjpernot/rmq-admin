@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  run_program.py
+"""Program:  generic_call.py
 
-    Description:  Unit testing of run_program in rmq_admin.py.
+    Description:  Unit testing of generic_call in rmq_admin.py.
 
     Usage:
-        test/unit/rmq_admin/run_program.py
+        test/unit/rmq_admin/generic_call.py
 
     Arguments:
 
@@ -35,24 +35,6 @@ import version
 __version__ = version.__version__
 
 
-def node_health(rmq, args):
-
-    """Function:  node_health
-
-    Description:  node_health function.
-
-    Arguments:
-
-    """
-
-    status = True
-
-    if rmq and args:
-        status = True
-
-    return status
-
-
 class ArgParser(object):
 
     """Class:  ArgParser
@@ -76,18 +58,6 @@ class ArgParser(object):
         """
 
         self.args_array = {"-c": "rabbitmq", "-d": "config"}
-
-    def get_val(self, skey, def_val=None):
-
-        """Method:  get_val
-
-        Description:  Method stub holder for gen_class.ArgParser.get_val.
-
-        Arguments:
-
-        """
-
-        return self.args_array.get(skey, def_val)
 
 
 class CfgTest(object):
@@ -126,7 +96,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_generic_call
+        test_email_subject
         test_default
 
     """
@@ -144,31 +114,30 @@ class UnitTest(unittest.TestCase):
         self.args = ArgParser()
         self.cfg = CfgTest()
         self.rmq = rabbitmq_class.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
+        self.data = {}
 
-    @mock.patch("rmq_admin.generic_call", mock.Mock(return_value=True))
-    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin")
-    @mock.patch("rmq_admin.gen_libs.load_module")
-    def test_generic_call(self, mock_cfg, mock_rmq):
+    @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.list_nodes")
+    def test_email_subject(self, mock_rmq):
 
-        """Function:  test_generic_call
+        """Function:  test_email_subject
 
-        Description:  Test with generic_call call.
+        Description:  Test with email subject.
 
         Arguments:
 
         """
 
-        self.args.args_array["-M"] = True
+        mock_rmq.return_value = self.data
 
-        mock_cfg.return_value = self.cfg
-        mock_rmq.return_value = self.rmq
+        self.assertFalse(
+            rmq_admin.generic_call(
+                self.args, rmq=self.rmq, method=self.rmq.list_nodes,
+                subj="Email_Subject_Line"))
 
-        self.assertFalse(rmq_admin.run_program(self.args))
-
-    @mock.patch("rmq_admin.node_health", mock.Mock(return_value=True))
-    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin")
-    @mock.patch("rmq_admin.gen_libs.load_module")
-    def test_default(self, mock_cfg, mock_rmq):
+    @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
+    @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.list_nodes")
+    def test_default(self, mock_rmq):
 
         """Function:  test_default
 
@@ -178,12 +147,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array["-N"] = True
+        mock_rmq.return_value = self.data
 
-        mock_cfg.return_value = self.cfg
-        mock_rmq.return_value = self.rmq
-
-        self.assertFalse(rmq_admin.run_program(self.args))
+        self.assertFalse(
+            rmq_admin.generic_call(
+                self.args, rmq=self.rmq, method=self.rmq.list_nodes))
 
 
 if __name__ == "__main__":
