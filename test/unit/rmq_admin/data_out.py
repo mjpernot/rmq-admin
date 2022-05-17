@@ -208,7 +208,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-
         self.args = ArgParser()
         self.mail = MailTest("toaddr")
 

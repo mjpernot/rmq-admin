@@ -113,7 +113,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-
         self.args = ArgParser()
         self.cfg = CfgTest()
         self.rmq = rabbitmq_class.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
@@ -135,7 +134,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(
             rmq_admin.generic_call(
-                self.rmq, self.args, method=self.rmq.list_nodes,
+                self.args, rmq=self.rmq, method=self.rmq.list_nodes,
                 subj="Email_Subject_Line"))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
@@ -154,7 +153,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(
             rmq_admin.generic_call(
-                self.rmq, self.args, method=self.rmq.list_nodes))
+                self.args, rmq=self.rmq, method=self.rmq.list_nodes))
 
 
 if __name__ == "__main__":

@@ -142,7 +142,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-
         self.args = ArgParser()
         self.cfg = CfgTest()
         self.rmq = rabbitmq_class.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
@@ -173,7 +172,7 @@ class UnitTest(unittest.TestCase):
 
         mock_get.return_value = self.data2
 
-        self.assertFalse(rmq_admin.node_health(self.rmq, self.args))
+        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -191,7 +190,7 @@ class UnitTest(unittest.TestCase):
 
         mock_get.return_value = self.data
 
-        self.assertFalse(rmq_admin.node_health(self.rmq, self.args))
+        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -209,7 +208,7 @@ class UnitTest(unittest.TestCase):
 
         mock_get.return_value = self.data2
 
-        self.assertFalse(rmq_admin.node_health(self.rmq, self.args))
+        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -227,7 +226,7 @@ class UnitTest(unittest.TestCase):
 
         mock_get.return_value = self.data2
 
-        self.assertFalse(rmq_admin.node_health(self.rmq, self.args))
+        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -245,7 +244,7 @@ class UnitTest(unittest.TestCase):
 
         mock_get.return_value = self.data
 
-        self.assertFalse(rmq_admin.node_health(self.rmq, self.args))
+        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
 
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_errors(self, mock_get):
@@ -262,7 +261,7 @@ class UnitTest(unittest.TestCase):
 
         mock_get.return_value = self.data
 
-        self.assertFalse(rmq_admin.node_health(self.rmq, self.args))
+        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
 
 
 if __name__ == "__main__":
