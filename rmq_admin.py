@@ -80,7 +80,6 @@ from __future__ import print_function
 import sys
 
 # Third-party
-import requests
 
 # Local
 import lib.gen_libs as gen_libs
@@ -130,21 +129,22 @@ def data_out(data, args, def_subj="NoSubjectLine"):
         no_std=args.get_val("-z", def_val=False))
 
 
-def node_health(rmq, args, **kwargs):
+def node_health(args, **kwargs):
 
     """Function:  node_health
 
     Description:  RabbitMQ Node health check.
 
     Arguments:
-        (input) rmq -> RabbitMQAdmin class instance
         (input) args -> ArgParser class instance
         (input) kwargs:
+            rmq -> RabbitMQAdmin class instance
             method -> Name of RabbitMQAdmin class method
             subj -> Subject line for email
 
     """
 
+    rmq = kwargs.get("rmq")
     verbose = args.get_val("-w", def_val=False)
     dtg = gen_libs.get_date() + " " + gen_libs.get_time()
     results = {"Type": "Node Health Check", "AsOf": dtg}
@@ -160,7 +160,7 @@ def node_health(rmq, args, **kwargs):
         data_out(results, args, def_subj="Node_Health_Check")
 
 
-def generic_call(rmq, args, **kwargs):
+def generic_call(args, **kwargs):
 
     """Function:  list_nodes
 
@@ -170,6 +170,7 @@ def generic_call(rmq, args, **kwargs):
         (input) rmq -> RabbitMQAdmin class instance
         (input) args -> ArgParser class instance
         (input) kwargs:
+            rmq -> RabbitMQAdmin class instance
             method -> Name of RabbitMQAdmin class method
             subj -> Subject line for email
 
@@ -242,11 +243,11 @@ def run_program(args):
     # Intersect args.args_array & func_dict to find which functions to call.
     for opt in set(args.args_array.keys()) & set(func_dict.keys()):
         func_dict[opt]["func"](
-            rmq, args, method=func_dict[opt]["method"],
+            args, rmq=rmq, method=func_dict[opt]["method"],
             subj=func_dict[opt]["subj"])
 
 
-def main(**kwargs):
+def main():
 
     """Function:  main
 
