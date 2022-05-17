@@ -31,7 +31,6 @@ import mock
 sys.path.append(os.getcwd())
 import rmq_admin
 import lib.gen_libs as gen_libs
-import rabbit_lib.rabbitmq_class as rabbitmq_class
 import version
 
 __version__ = version.__version__

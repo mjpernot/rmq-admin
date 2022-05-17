@@ -24,13 +24,11 @@ else:
     import unittest
 
 # Third-party
-import json
 import mock
 
 # Local
 sys.path.append(os.getcwd())
 import rmq_admin
-import lib.gen_libs as gen_libs
 import rabbit_lib.rabbitmq_class as rabbitmq_class
 import version
 

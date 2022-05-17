@@ -30,7 +30,6 @@ import mock
 sys.path.append(os.getcwd())
 import rmq_admin
 import lib.gen_libs as gen_libs
-import lib.gen_class as gen_class
 import version
 
 __version__ = version.__version__
