@@ -6,5 +6,5 @@
 
 echo ""
 echo "Integration test:  rmq_admin.py"
-/usr/bin/python test/integration/rmq_admin/node_health.py
+/usr/bin/python3 test/integration/rmq_admin/node_health.py
 

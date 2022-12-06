@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  data_out.py
@@ -17,11 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 
 # Third-party
 import json
@@ -46,7 +41,10 @@ def linecnt(fname):
 
     """
 
-    return sum(1 for _ in open(fname))
+    with open(fname) as f_hldr:
+        data = sum(1 for _ in f_hldr)
+
+    return data
 
 
 class ArgParser(object):
