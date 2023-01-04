@@ -80,8 +80,6 @@ from __future__ import absolute_import
 # Standard
 import sys
 
-# Third-party
-
 # Local
 try:
     from .lib import gen_libs
