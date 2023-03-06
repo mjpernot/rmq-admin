@@ -7,7 +7,6 @@
 
 ###  This README file is broken down into the following sections:
  * Features
- * Prerequisites
  * Installation
  * Configuration
  * Running
@@ -19,15 +18,6 @@
 
 # Features:
  * RabbitMQ Node health check.
-
-
-# Prerequisites:
-  * List of Linux packages that need to be installed on the server.
-    - git
-    - python-pip
-
-  * Local class/library dependencies within the program structure.
-    - python-lib
 
 
 # Installation:
