@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.0.3] - 2021-12-06
+- Updated to work in Python 3 too
+- Upgraded python-lib to v2.9.4
+- Upgraded rabbitmq-lib to v2.2.1
+ 
+### Changed
+- Converted imports to use Python 2.7 or Python 3.
+
+
 ## [0.0.2] - 2021-10-14
 - Added gen_class.RabbitMQAdmin class to handle RabbitMQ administration commands.
 - Added a number of new command line options.
