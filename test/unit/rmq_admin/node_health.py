@@ -16,7 +16,17 @@
 # Standard
 import sys
 import os
+<<<<<<< HEAD
 import unittest
+=======
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
+
+# Third-party
+>>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
 import mock
 
 # Local
@@ -64,11 +74,19 @@ class ArgParser(object):
         """
 
         self.args_array = {"-c": "rabbitmq", "-d": "config"}
+<<<<<<< HEAD
 
     def get_val(self, skey, def_val=None):
 
         """Method:  get_val
 
+=======
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+>>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
         Description:  Method stub holder for gen_class.ArgParser.get_val.
 
         Arguments:
