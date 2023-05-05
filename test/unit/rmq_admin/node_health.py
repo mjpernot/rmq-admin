@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  node_health.py
@@ -17,6 +16,7 @@
 # Standard
 import sys
 import os
+<<<<<<< HEAD
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -24,6 +24,9 @@ else:
     import unittest
 
 # Third-party
+=======
+import unittest
+>>>>>>> mod/003
 import mock
 
 # Local
@@ -71,11 +74,19 @@ class ArgParser(object):
         """
 
         self.args_array = {"-c": "rabbitmq", "-d": "config"}
+<<<<<<< HEAD
 
     def get_val(self, skey, def_val=None):
 
         """Method:  get_val
 
+=======
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+>>>>>>> mod/003
         Description:  Method stub holder for gen_class.ArgParser.get_val.
 
         Arguments:

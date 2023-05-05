@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 #!/usr/bin/python
+=======
+>>>>>>> mod/003
 # Classification (U)
 
 """Program:  generic_call.py
@@ -17,6 +20,7 @@
 # Standard
 import sys
 import os
+<<<<<<< HEAD
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -24,6 +28,9 @@ else:
     import unittest
 
 # Third-party
+=======
+import unittest
+>>>>>>> mod/003
 import mock
 
 # Local

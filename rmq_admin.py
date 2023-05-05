@@ -74,11 +74,13 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
+from __future__ import absolute_import
 
 # Standard
-from __future__ import print_function
 import sys
 
+<<<<<<< HEAD
 # Third-party
 
 # Local
@@ -86,6 +88,20 @@ import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import rabbit_lib.rabbitmq_class as rabbitmq_class
 import version
+=======
+# Local
+try:
+    from .lib import gen_libs
+    from .lib import gen_class
+    from .rabbit_lib import rabbitmq_class
+    from . import version
+
+except (ValueError, ImportError) as err:
+    import lib.gen_libs as gen_libs
+    import lib.gen_class as gen_class
+    import rabbit_lib.rabbitmq_class as rabbitmq_class
+    import version
+>>>>>>> mod/003
 
 __version__ = version.__version__
 
@@ -173,9 +189,15 @@ def generic_call(args, **kwargs):
             rmq -> RabbitMQAdmin class instance
             method -> Name of RabbitMQAdmin class method
             subj -> Subject line for email
+<<<<<<< HEAD
 
     """
 
+=======
+
+    """
+
+>>>>>>> mod/003
     data = kwargs.get("method")()
     data_out(data, args, def_subj=kwargs.get("subj", None))
 
