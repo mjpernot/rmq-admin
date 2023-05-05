@@ -6,9 +6,5 @@
 
 echo ""
 echo "Integration test:  rmq_admin.py"
-<<<<<<< HEAD
 /usr/bin/python test/integration/rmq_admin/node_health.py
-=======
-test/integration/rmq_admin/node_health.py
->>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
 

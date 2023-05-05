@@ -6,19 +6,10 @@
 
 echo ""
 echo "Unit test:  rmq_admin.py"
-<<<<<<< HEAD
 /usr/bin/python test/unit/rmq_admin/data_out.py
 /usr/bin/python test/unit/rmq_admin/generic_call.py
 /usr/bin/python test/unit/rmq_admin/help_message.py
 /usr/bin/python test/unit/rmq_admin/main.py
 /usr/bin/python test/unit/rmq_admin/node_health.py
 /usr/bin/python test/unit/rmq_admin/run_program.py
-=======
-test/unit/rmq_admin/data_out.py
-test/unit/rmq_admin/generic_call.py
-test/unit/rmq_admin/help_message.py
-test/unit/rmq_admin/main.py
-test/unit/rmq_admin/node_health.py
-test/unit/rmq_admin/run_program.py
->>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
 

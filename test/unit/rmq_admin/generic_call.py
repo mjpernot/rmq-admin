@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-#!/usr/bin/python
->>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
 # Classification (U)
 
 """Program:  generic_call.py
@@ -20,17 +16,7 @@
 # Standard
 import sys
 import os
-<<<<<<< HEAD
 import unittest
-=======
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
->>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
 import mock
 
 # Local

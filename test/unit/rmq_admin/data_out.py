@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-#!/usr/bin/python
->>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
 # Classification (U)
 
 """Program:  data_out.py
@@ -20,17 +16,7 @@
 # Standard
 import sys
 import os
-<<<<<<< HEAD
 import unittest
-=======
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
->>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
 import json
 import mock
 
@@ -53,14 +39,10 @@ def linecnt(fname):
 
     """
 
-<<<<<<< HEAD
     with open(fname) as f_hldr:
         data = sum(1 for _ in f_hldr)
 
     return data
-=======
-    return sum(1 for _ in open(fname))
->>>>>>> d2949f9c489d26b40aa0fd748442b2789da7dc96
 
 
 class ArgParser(object):
