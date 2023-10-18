@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Fixed
 - main: Fixed call to gen_libs.help_func by passing the gen_class.ArgParser instance.
+- main: Fixed a number of errors when calling the gen_class.ArgParser methods.
 
 ### Changed
 - main: Removed gen_libs.get_inst call.

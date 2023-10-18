@@ -209,42 +209,41 @@ def run_program(args):
     #   email is required.  The "generic_call" is for most calls, only if other
     #   requirements are needed then call another function.
     func_dict = {
-        "-C": {"method": rmq.list_channels,
-               "subj": "List_Channels",
-               "func": generic_call},
-        "-D": {"method": rmq.list_connections,
-               "subj": "List_Connections",
-               "func": generic_call},
-        "-E": {"method": rmq.list_exchanges,
-               "subj": "List_Exchanges",
-               "func": generic_call},
-        "-F": {"method": rmq.list_consumers,
-               "subj": "List_Consumers",
-               "func": generic_call},
-        "-L": {"method": rmq.get_cluster_name,
-               "subj": "Cluster_Name",
-               "func": generic_call},
-        "-M": {"method": rmq.list_nodes,
-               "subj": "List_Nodes",
-               "func": generic_call},
-        "-N": {"method": node_health,
-               "subj": "List_Nodes",
-               "func": node_health},
-        "-O": {"method": rmq.overview,
-               "subj": "Node_OverView",
-               "func": generic_call},
-        "-P": {"method": rmq.list_permissions,
-               "subj": "List_Permissions",
-               "func": generic_call},
-        "-Q": {"method": rmq.list_queues,
-               "subj": "List_Queues",
-               "func": generic_call},
-        "-U": {"method": rmq.list_users,
-               "subj": "List_Users",
-               "func": generic_call},
-        "-V": {"method": rmq.list_vhosts,
-               "subj": "List_Vhosts",
-               "func": generic_call}}
+        "-C": {
+            "method": rmq.list_channels, "subj": "List_Channels",
+            "func": generic_call},
+        "-D": {
+            "method": rmq.list_connections, "subj": "List_Connections",
+            "func": generic_call},
+        "-E": {
+            "method": rmq.list_exchanges, "subj": "List_Exchanges",
+            "func": generic_call},
+        "-F": {
+            "method": rmq.list_consumers, "subj": "List_Consumers",
+            "func": generic_call},
+        "-L": {
+            "method": rmq.get_cluster_name, "subj": "Cluster_Name",
+            "func": generic_call},
+        "-M": {
+            "method": rmq.list_nodes, "subj": "List_Nodes",
+            "func": generic_call},
+        "-N": {
+            "method": node_health, "subj": "List_Nodes", "func": node_health},
+        "-O": {
+            "method": rmq.overview, "subj": "Node_OverView",
+            "func": generic_call},
+        "-P": {
+            "method": rmq.list_permissions, "subj": "List_Permissions",
+            "func": generic_call},
+        "-Q": {
+            "method": rmq.list_queues, "subj": "List_Queues",
+            "func": generic_call},
+        "-U": {
+            "method": rmq.list_users, "subj": "List_Users",
+            "func": generic_call},
+        "-V": {
+            "method": rmq.list_vhosts, "subj": "List_Vhosts",
+            "func": generic_call}}
 
     # Intersect args.args_array & func_dict to find which functions to call.
     for opt in set(args.args_array.keys()) & set(func_dict.keys()):
@@ -277,23 +276,20 @@ def main():
     dir_perms_chk = {"-d": 5}
     file_perm_chk = {"-o": 6}
     file_crt = ["-o"]
-#    dir_chk_list = ["-d"]
-#    file_chk_list = ["-o"]
-#    file_crt_list = ["-o"]
     opt_con_req_list = {"-s": ["-t"]}
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y"]
 
-    # Process argument list from command line.
+    # Process argument list from command line
     args = gen_class.ArgParser(
         sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
         do_parse=True)
 
     if not gen_libs.help_func(args, __version__, help_message)               \
        and args.arg_require(opt_req=opt_req_list)                            \
-       and args.arg_dir_chk_crt(dir_chk=dir_chk_list)                        \
-       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list) \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)                     \
+       and args.arg_file_chk(file_perm_chk=file_perm_chk, file_crt=file_crt) \
        and args.arg_cond_req(opt_con_req=opt_con_req_list):
 
         try:
