@@ -261,22 +261,25 @@ def main():
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
-        file_chk_list -> contains the options which will have files included.
-        file_crt_list -> contains options which require files to be created.
-        opt_con_req_list -> contains the options that require other options.
-        opt_multi_list -> contains the options that will have multiple values.
-        opt_req_list -> contains options that are required for the program.
-        opt_val_list -> contains options which require values.
+        dir_perms_chk -> contains directories and their octal permissions
+        file_perm_chk -> file check options with their perms in octal
+        file_crt -> contains options which require files to be created
+        opt_con_req_list -> contains the options that require other options
+        opt_multi_list -> contains the options that will have multiple values
+        opt_req_list -> contains options that are required for the program
+        opt_val_list -> contains options which require values
 
     Arguments:
-        (input) sys.argv -> Arguments from the command line.
+        (input) sys.argv -> Arguments from the command line
 
     """
 
-    dir_chk_list = ["-d"]
-    file_chk_list = ["-o"]
-    file_crt_list = ["-o"]
+    dir_perms_chk = {"-d": 5}
+    file_perm_chk = {"-o": 6}
+    file_crt = ["-o"]
+#    dir_chk_list = ["-d"]
+#    file_chk_list = ["-o"]
+#    file_crt_list = ["-o"]
     opt_con_req_list = {"-s": ["-t"]}
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]
@@ -287,9 +290,9 @@ def main():
         sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
         do_parse=True)
 
-    if not gen_libs.help_func(args.args_array, __version__, help_message) \
-       and args.arg_require(opt_req=opt_req_list) \
-       and args.arg_dir_chk_crt(dir_chk=dir_chk_list) \
+    if not gen_libs.help_func(args, __version__, help_message)               \
+       and args.arg_require(opt_req=opt_req_list)                            \
+       and args.arg_dir_chk_crt(dir_chk=dir_chk_list)                        \
        and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list) \
        and args.arg_cond_req(opt_con_req=opt_con_req_list):
 

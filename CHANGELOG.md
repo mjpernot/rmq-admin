@@ -7,6 +7,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [0.0.4] - 2023-10-18
 - Upgraded python-lib to v2.10.1
 
+### Fixed
+- main: Fixed call to gen_libs.help_func by passing the gen_class.ArgParser instance.
+
 ### Changed
 - main: Removed gen_libs.get_inst call.
 - Documentation changes.
