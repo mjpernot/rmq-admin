@@ -282,11 +282,9 @@ def main():
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y"]
 
-    cmdline = gen_libs.get_inst(sys)
-
     # Process argument list from command line.
     args = gen_class.ArgParser(
-        cmdline.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
+        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
         do_parse=True)
 
     if not gen_libs.help_func(args.args_array, __version__, help_message) \
@@ -297,7 +295,7 @@ def main():
 
         try:
             prog_lock = gen_class.ProgramLock(
-                cmdline.argv, args.get_val("-y", def_val=""))
+                sys.argv, args.get_val("-y", def_val=""))
             run_program(args)
             del prog_lock
 
