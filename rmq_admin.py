@@ -41,7 +41,7 @@
                 -a => Append output to output file.
 
         -N -> Node health check
-            -w -> Print results of check for all returns.
+            -w -> Verbose, print results of check for all returns.
             -z => Suppress standard out.
             -t to_email to_email2 => Enables emailing capability for an option
                 if the option allows it.  Sends output to one or more email
@@ -123,6 +123,8 @@ def data_out(data, args, def_subj="NoSubjectLine"):
 
     """
 
+    data = dict(data)
+
     if args.get_val("-t", def_val=False):
         mail = gen_class.setup_mail(
             args.get_val("-t"), subj=args.get_val("-s", def_val=def_subj))
@@ -131,8 +133,8 @@ def data_out(data, args, def_subj="NoSubjectLine"):
 
     gen_libs.print_dict(
         data, ofile=args.get_val("-o", def_val=None),
-        mode="a" if args.get_val("-a", def_val=False) else "w", json_fmt=True,
-        no_std=args.get_val("-z", def_val=False))
+        mode="a" if args.arg_exist("-a") else "w", json_fmt=True,
+        no_std=args.arg_exist("-z"))
 
 
 def node_health(args, **kwargs):
@@ -151,7 +153,6 @@ def node_health(args, **kwargs):
     """
 
     rmq = kwargs.get("rmq")
-    verbose = args.get_val("-w", def_val=False)
     dtg = gen_libs.get_date() + " " + gen_libs.get_time()
     results = {"Type": "Node Health Check", "AsOf": dtg}
     data = rmq.get(
@@ -162,7 +163,7 @@ def node_health(args, **kwargs):
     if data["status"] != "ok":
         results["Message"] = data["reason"]
 
-    if data["status"] != "ok" or verbose:
+    if data["status"] != "ok" or args.arg_exist("-w"):
         data_out(results, args, def_subj="Node_Health_Check")
 
 
@@ -209,45 +210,44 @@ def run_program(args):
     #   email is required.  The "generic_call" is for most calls, only if other
     #   requirements are needed then call another function.
     func_dict = {
-        "-C": {"method": rmq.list_channels,
-               "subj": "List_Channels",
-               "func": generic_call},
-        "-D": {"method": rmq.list_connections,
-               "subj": "List_Connections",
-               "func": generic_call},
-        "-E": {"method": rmq.list_exchanges,
-               "subj": "List_Exchanges",
-               "func": generic_call},
-        "-F": {"method": rmq.list_consumers,
-               "subj": "List_Consumers",
-               "func": generic_call},
-        "-L": {"method": rmq.get_cluster_name,
-               "subj": "Cluster_Name",
-               "func": generic_call},
-        "-M": {"method": rmq.list_nodes,
-               "subj": "List_Nodes",
-               "func": generic_call},
-        "-N": {"method": node_health,
-               "subj": "List_Nodes",
-               "func": node_health},
-        "-O": {"method": rmq.overview,
-               "subj": "Node_OverView",
-               "func": generic_call},
-        "-P": {"method": rmq.list_permissions,
-               "subj": "List_Permissions",
-               "func": generic_call},
-        "-Q": {"method": rmq.list_queues,
-               "subj": "List_Queues",
-               "func": generic_call},
-        "-U": {"method": rmq.list_users,
-               "subj": "List_Users",
-               "func": generic_call},
-        "-V": {"method": rmq.list_vhosts,
-               "subj": "List_Vhosts",
-               "func": generic_call}}
+        "-C": {
+            "method": rmq.list_channels, "subj": "List_Channels",
+            "func": generic_call},
+        "-D": {
+            "method": rmq.list_connections, "subj": "List_Connections",
+            "func": generic_call},
+        "-E": {
+            "method": rmq.list_exchanges, "subj": "List_Exchanges",
+            "func": generic_call},
+        "-F": {
+            "method": rmq.list_consumers, "subj": "List_Consumers",
+            "func": generic_call},
+        "-L": {
+            "method": rmq.get_cluster_name, "subj": "Cluster_Name",
+            "func": generic_call},
+        "-M": {
+            "method": rmq.list_nodes, "subj": "List_Nodes",
+            "func": generic_call},
+        "-N": {
+            "method": node_health, "subj": "List_Nodes", "func": node_health},
+        "-O": {
+            "method": rmq.overview, "subj": "Node_OverView",
+            "func": generic_call},
+        "-P": {
+            "method": rmq.list_permissions, "subj": "List_Permissions",
+            "func": generic_call},
+        "-Q": {
+            "method": rmq.list_queues, "subj": "List_Queues",
+            "func": generic_call},
+        "-U": {
+            "method": rmq.list_users, "subj": "List_Users",
+            "func": generic_call},
+        "-V": {
+            "method": rmq.list_vhosts, "subj": "List_Vhosts",
+            "func": generic_call}}
 
-    # Intersect args.args_array & func_dict to find which functions to call.
-    for opt in set(args.args_array.keys()) & set(func_dict.keys()):
+    # Intersect args.args_array & func_dict to find which functions to call
+    for opt in set(args.get_args_keys()) & set(func_dict.keys()):
         func_dict[opt]["func"](
             args, rmq=rmq, method=func_dict[opt]["method"],
             subj=func_dict[opt]["subj"])
@@ -261,43 +261,41 @@ def main():
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
-        file_chk_list -> contains the options which will have files included.
-        file_crt_list -> contains options which require files to be created.
-        opt_con_req_list -> contains the options that require other options.
-        opt_multi_list -> contains the options that will have multiple values.
-        opt_req_list -> contains options that are required for the program.
-        opt_val_list -> contains options which require values.
+        dir_perms_chk -> contains directories and their octal permissions
+        file_perm_chk -> file check options with their perms in octal
+        file_crt -> contains options which require files to be created
+        opt_con_req_list -> contains the options that require other options
+        opt_multi_list -> contains the options that will have multiple values
+        opt_req_list -> contains options that are required for the program
+        opt_val_list -> contains options which require values
 
     Arguments:
-        (input) sys.argv -> Arguments from the command line.
+        (input) sys.argv -> Arguments from the command line
 
     """
 
-    dir_chk_list = ["-d"]
-    file_chk_list = ["-o"]
-    file_crt_list = ["-o"]
+    dir_perms_chk = {"-d": 5}
+    file_perm_chk = {"-o": 6}
+    file_crt = ["-o"]
     opt_con_req_list = {"-s": ["-t"]}
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]
     opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y"]
 
-    cmdline = gen_libs.get_inst(sys)
-
-    # Process argument list from command line.
+    # Process argument list from command line
     args = gen_class.ArgParser(
-        cmdline.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
+        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list,
         do_parse=True)
 
-    if not gen_libs.help_func(args.args_array, __version__, help_message) \
-       and args.arg_require(opt_req=opt_req_list) \
-       and args.arg_dir_chk_crt(dir_chk=dir_chk_list) \
-       and args.arg_file_chk(file_chk=file_chk_list, file_crt=file_crt_list) \
+    if not gen_libs.help_func(args, __version__, help_message)               \
+       and args.arg_require(opt_req=opt_req_list)                            \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)                     \
+       and args.arg_file_chk(file_perm_chk=file_perm_chk, file_crt=file_crt) \
        and args.arg_cond_req(opt_con_req=opt_con_req_list):
 
         try:
             prog_lock = gen_class.ProgramLock(
-                cmdline.argv, args.get_val("-y", def_val=""))
+                sys.argv, args.get_val("-y", def_val=""))
             run_program(args)
             del prog_lock
 

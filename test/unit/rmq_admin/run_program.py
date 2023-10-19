@@ -54,6 +54,7 @@ class ArgParser(object):
 
     Methods:
         __init__
+        get_args_keys
         get_val
 
     """
@@ -69,6 +70,18 @@ class ArgParser(object):
         """
 
         self.args_array = {"-c": "rabbitmq", "-d": "config"}
+
+    def get_args_keys(self):
+
+        """Method:  get_args_keys
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args_keys.
+
+        Arguments:
+
+        """
+
+        return list(self.args_array.keys())
 
     def get_val(self, skey, def_val=None):
 
