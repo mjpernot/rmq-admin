@@ -41,7 +41,7 @@
                 -a => Append output to output file.
 
         -N -> Node health check
-            -w -> Print results of check for all returns.
+            -w -> Verbose, print results of check for all returns.
             -z => Suppress standard out.
             -t to_email to_email2 => Enables emailing capability for an option
                 if the option allows it.  Sends output to one or more email
@@ -123,6 +123,8 @@ def data_out(data, args, def_subj="NoSubjectLine"):
 
     """
 
+    data = dict(data)
+
     if args.get_val("-t", def_val=False):
         mail = gen_class.setup_mail(
             args.get_val("-t"), subj=args.get_val("-s", def_val=def_subj))
@@ -131,8 +133,8 @@ def data_out(data, args, def_subj="NoSubjectLine"):
 
     gen_libs.print_dict(
         data, ofile=args.get_val("-o", def_val=None),
-        mode="a" if args.get_val("-a", def_val=False) else "w", json_fmt=True,
-        no_std=args.get_val("-z", def_val=False))
+        mode="a" if args.arg_exist("-a") else "w", json_fmt=True,
+        no_std=args.arg_exist("-z"))
 
 
 def node_health(args, **kwargs):
@@ -151,7 +153,6 @@ def node_health(args, **kwargs):
     """
 
     rmq = kwargs.get("rmq")
-    verbose = args.get_val("-w", def_val=False)
     dtg = gen_libs.get_date() + " " + gen_libs.get_time()
     results = {"Type": "Node Health Check", "AsOf": dtg}
     data = rmq.get(
@@ -162,7 +163,7 @@ def node_health(args, **kwargs):
     if data["status"] != "ok":
         results["Message"] = data["reason"]
 
-    if data["status"] != "ok" or verbose:
+    if data["status"] != "ok" or args.arg_exist("-w"):
         data_out(results, args, def_subj="Node_Health_Check")
 
 
@@ -245,8 +246,8 @@ def run_program(args):
             "method": rmq.list_vhosts, "subj": "List_Vhosts",
             "func": generic_call}}
 
-    # Intersect args.args_array & func_dict to find which functions to call.
-    for opt in set(args.args_array.keys()) & set(func_dict.keys()):
+    # Intersect args.args_array & func_dict to find which functions to call
+    for opt in set(args.get_args_keys()) & set(func_dict.keys()):
         func_dict[opt]["func"](
             args, rmq=rmq, method=func_dict[opt]["method"],
             subj=func_dict[opt]["subj"])

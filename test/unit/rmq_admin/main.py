@@ -37,7 +37,7 @@ class ArgParser(object):
     Methods:
         __init__
         arg_cond_req
-        arg_dir_chk_crt
+        arg_dir_chk
         arg_file_chk
         arg_require
         get_val
@@ -57,13 +57,13 @@ class ArgParser(object):
         self.cmdline = None
         self.args_array = dict()
         self.opt_req = None
-        self.dir_chk = None
-        self.file_chk = None
+        self.opt_req2 = True
+        self.dir_perms_chk = None
+        self.dir_perms_chk2 = True
+        self.file_perm_chk = None
+        self.file_perm_chk2 = True
         self.file_crt = None
         self.opt_con_req = None
-        self.opt_req2 = True
-        self.dir_chk2 = True
-        self.file_chk2 = True
         self.opt_con_req2 = True
 
     def arg_cond_req(self, opt_con_req):
@@ -80,22 +80,21 @@ class ArgParser(object):
 
         return self.opt_con_req2
 
-    def arg_dir_chk_crt(self, dir_chk):
+    def arg_dir_chk(self, dir_perms_chk):
 
-        """Method:  arg_dir_chk_crt
+        """Method:  arg_dir_chk
 
-        Description:  Method stub holder for
-            gen_class.ArgParser.arg_dir_chk_crt.
+        Description:  Method stub holder for gen_class.ArgParser.arg_dir_chk.
 
         Arguments:
 
         """
 
-        self.dir_chk = dir_chk
+        self.dir_perms_chk = dir_perms_chk
 
-        return self.dir_chk2
+        return self.dir_perms_chk2
 
-    def arg_file_chk(self, file_chk, file_crt):
+    def arg_file_chk(self, file_perm_chk, file_crt):
 
         """Method:  arg_file_chk
 
@@ -105,10 +104,10 @@ class ArgParser(object):
 
         """
 
-        self.file_chk = file_chk
+        self.file_perm_chk = file_perm_chk
         self.file_crt = file_crt
 
-        return self.file_chk2
+        return self.file_perm_chk2
 
     def arg_require(self, opt_req):
 
@@ -124,7 +123,7 @@ class ArgParser(object):
 
         return self.opt_req2
 
-    def get_val(self, skey, def_val):
+    def get_val(self, skey, def_val=None):
 
         """Method:  get_val
 
@@ -264,7 +263,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.dir_chk2 = False
+        self.args.dir_perms_chk2 = False
 
         mock_arg.return_value = self.args
 
@@ -276,13 +275,13 @@ class UnitTest(unittest.TestCase):
 
         """Function:  test_arg_dir_false
 
-        Description:  Test arg_dir_chk_crt if returns false.
+        Description:  Test arg_dir_chk if returns false.
 
         Arguments:
 
         """
 
-        self.args.dir_chk2 = False
+        self.args.dir_perms_chk2 = False
 
         mock_arg.return_value = self.args
 
@@ -294,13 +293,13 @@ class UnitTest(unittest.TestCase):
 
         """Function:  test_arg_dir_true
 
-        Description:  Test arg_dir_chk_crt if returns true.
+        Description:  Test arg_dir_chk if returns true.
 
         Arguments:
 
         """
 
-        self.args.file_chk2 = False
+        self.args.file_perm_chk2 = False
 
         mock_arg.return_value = self.args
 
@@ -318,7 +317,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.file_chk2 = False
+        self.args.file_perm_chk2 = False
 
         mock_arg.return_value = self.args
 
@@ -455,7 +454,6 @@ class UnitTest(unittest.TestCase):
         self.args.args_array = {"-y": "FlavorID"}
 
         mock_arg.return_value = self.args
-        mock_lock.return_value = self.proglock
         mock_lock.return_value = self.proglock
 
         self.assertFalse(rmq_admin.main())
