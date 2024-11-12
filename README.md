@@ -117,7 +117,7 @@ Install the project using the procedures in the Installation section.
 
 ```
 cd {Python_Project}/rmq-admin
-test/unit/rmq_admin/unit_test_run.sh
+test/unit/rmq_admin/unit_test_run3.sh
 ```
 
 ### Code coverage:
@@ -157,7 +157,7 @@ chmod 600 rabbitmq.py
 
 ```
 cd {Python_Project}/rmq-admin
-test/integration/rmq_admin/integration_test_run.sh
+test/integration/rmq_admin/integration_test_run3.sh
 ```
 
 ### Code coverage:
