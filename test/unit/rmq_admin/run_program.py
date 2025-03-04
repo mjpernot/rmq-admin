@@ -21,9 +21,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_admin
-import rabbit_lib.rabbitmq_class as rabbitmq_class
-import version
+import rmq_admin                                # pylint:disable=E0401,C0413
+import rabbit_lib.rabbitmq_class as rmqcls  # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -46,7 +46,7 @@ def node_health(rmq, args):
     return status
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -96,7 +96,7 @@ class ArgParser(object):
         return self.args_array.get(skey, def_val)
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 
@@ -149,7 +149,7 @@ class UnitTest(unittest.TestCase):
 
         self.args = ArgParser()
         self.cfg = CfgTest()
-        self.rmq = rabbitmq_class.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
+        self.rmq = rmqcls.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
 
     @mock.patch("rmq_admin.generic_call", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin")

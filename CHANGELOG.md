@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.1.0] - 2025-03-04
+Alpha release
+
+- Removed Python 2.7 code.
+- Updated urllib3==1.26.20
+- Added certifi==2024.12.14
+- Updated python-lib==4.0.0
+- Updated rabbitmq-lib==2.3.0
+
+### Changed
+- main: Converted string to f-string.
+- Documentation updates.
+
+
 ## [0.0.10] - 2024-11-19
 - Updated python-lib to v3.0.8
 - Updated rabbitmq-lib to v2.2.8
