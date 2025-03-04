@@ -21,9 +21,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_admin
-import rabbit_lib.rabbitmq_class as rabbitmq_class
-import version
+import rmq_admin                                # pylint:disable=E0401,C0413
+import rabbit_lib.rabbitmq_class as rmqcls  # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -38,10 +38,13 @@ def linecnt(fname):
 
     """
 
-    return sum(1 for _ in open(fname))
+    with open(fname, mode="r", encoding="UTF-8") as f_hldr:
+        data = sum(1 for _ in f_hldr)
+
+    return data
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -88,10 +91,10 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
 
-class CfgTest(object):
+class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
 
@@ -148,7 +151,7 @@ class UnitTest(unittest.TestCase):
 
         self.args = ArgParser()
         self.cfg = CfgTest()
-        self.rmq = rabbitmq_class.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
+        self.rmq = rmqcls.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
 
         self.data = {'status': 'ok'}
         self.data2 = {'status': 'failed', 'reason': 'reason for failure'}

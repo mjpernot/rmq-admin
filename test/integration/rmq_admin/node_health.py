@@ -21,9 +21,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_admin
-import lib.gen_libs as gen_libs
-import version
+import rmq_admin                                # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -38,7 +38,10 @@ def linecnt(fname):
 
     """
 
-    return sum(1 for _ in open(fname))
+    with open(fname, mode="r", encoding="UTF-8") as f_hldr:
+        data = sum(1 for _ in f_hldr)
+
+    return data
 
 
 class UnitTest(unittest.TestCase):
