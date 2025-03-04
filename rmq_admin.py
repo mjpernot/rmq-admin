@@ -74,8 +74,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Standard
 import sys
@@ -88,9 +86,9 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import rabbit_lib.rabbitmq_class as rabbitmq_class
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import rabbit_lib.rabbitmq_class as rabbitmq_class  # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -300,8 +298,8 @@ def main():
             del prog_lock
 
         except gen_class.SingleInstanceException:
-            print("rmq_admin lock in place for: %s"
-                  % (args.get_val("-y", def_val="")))
+            print(f'rmq_admin lock in place for:'
+                  f' {args.get_val("-y", def_val="")}')
 
 
 if __name__ == "__main__":

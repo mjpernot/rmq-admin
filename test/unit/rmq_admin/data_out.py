@@ -22,9 +22,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_admin
-import lib.gen_libs as gen_libs
-import version
+import rmq_admin                                # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -39,13 +39,13 @@ def linecnt(fname):
 
     """
 
-    with open(fname) as f_hldr:
+    with open(fname, mode="r", encoding="UTF-8") as f_hldr:
         data = sum(1 for _ in f_hldr)
 
     return data
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -92,10 +92,10 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
 
-class MailTest(object):
+class MailTest():
 
     """Class:  MailTest
 
@@ -159,8 +159,6 @@ class MailTest(object):
         Arguments:
 
         """
-
-        pass
 
 
 class UnitTest(unittest.TestCase):
