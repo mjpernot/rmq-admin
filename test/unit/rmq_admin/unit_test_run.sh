@@ -6,6 +6,8 @@
 
 echo ""
 echo "Unit test:  rmq_admin.py"
+/usr/bin/python test/unit/rmq_admin/create_data_config.py
+/usr/bin/python test/unit/rmq_admin/create_header.py
 /usr/bin/python test/unit/rmq_admin/data_out.py
 /usr/bin/python test/unit/rmq_admin/generic_call.py
 /usr/bin/python test/unit/rmq_admin/help_message.py

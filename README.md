@@ -71,8 +71,8 @@ Make the appropriate changes to the RabbitMQ environment.
 
 ```
 cp config/rabbitmq.py.TEMPLATE config/rabbitmq.py
-vim config/rabbitmq.py
 chmod 600 config/rabbitmq.py
+vim config/rabbitmq.py
 ```
 
 
@@ -119,8 +119,8 @@ Make the appropriate changes to the RabbitMQ environment.
 
 ```
 cp config/rabbitmq.py.TEMPLATE test/integration/rmq_admin/config/rabbitmq.py
-vim test/integration/rmq_admin/config/rabbitmq.py
 chmod 600 test/integration/rmq_admin/config/rabbitmq.py
+vim test/integration/rmq_admin/config/rabbitmq.py
 ```
 
 ### Testing:
