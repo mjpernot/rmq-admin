@@ -45,61 +45,11 @@ def linecnt(fname):
     return data
 
 
-class ArgParser():
+class Mail():
 
-    """Class:  ArgParser
+    """Class:  Mail
 
-    Description:  Class stub holder for gen_class.ArgParser class.
-
-    Methods:
-        __init__
-        get_val
-        arg_exist
-
-    """
-
-    def __init__(self):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.args_array = {"-c": "rabbitmq", "-d": "config"}
-
-    def get_val(self, skey, def_val=None):
-
-        """Method:  get_val
-
-        Description:  Method stub holder for gen_class.ArgParser.get_val.
-
-        Arguments:
-
-        """
-
-        return self.args_array.get(skey, def_val)
-
-    def arg_exist(self, arg):
-
-        """Method:  arg_exist
-
-        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
-
-        Arguments:
-
-        """
-
-        return arg in self.args_array
-
-
-class MailTest():
-
-    """Class:  MailTest
-
-    Description:  Class which is a representation of an email.
+    Description:  Class which is a representation of the gen_class.Mail class.
 
     Methods:
         __init__
@@ -161,6 +111,74 @@ class MailTest():
         """
 
 
+class Mail2():
+
+    """Class:  Mail2
+
+    Description:  Class which is a representation of the gen_class.Mail2 class.
+
+    Methods:
+        __init__
+        add_attachment
+        send_mail
+
+    """
+
+    def __init__(self, subject, toaddrs, fromaddr=None):
+
+        """Method:  __init__
+
+        Description:  Initialization of an instance of the Mail2 class.
+
+        Arguments:
+
+        """
+
+        self.msg = {}
+        # Dictionary of file types/extensions and their associated MIME types
+        self.ftypes = {
+            "plain": "plain", "text": "plain", "sh": "x-sh", "x-sh": "x-sh",
+            "tar": "x-tar", "x-tar": "x-tar", "pdf": "pdf", "json": "json",
+            "gz": "gzip", "gzip": "gzip"}
+        self.subj = " ".join(subject) if isinstance(subject, list) else subject
+        self.toaddrs = ",".join(
+            toaddrs) if isinstance(toaddrs, list) else toaddrs
+        self.fromaddr = fromaddr if fromaddr else "username@hostname"
+        self.msg["From"] = self.fromaddr
+        self.msg["To"] = self.toaddrs
+        self.msg["Subject"] = self.subj
+        self.fname = None
+        self.data = None
+        self.host = None
+
+    def add_attachment(self, fname, ftype, data):
+
+        """Method:  add_attachment
+
+        Description:  Converts the file data into base64 format and attaches
+            the data and filename to the email.
+
+        Arguments:
+
+        """
+
+        ftype = self.ftypes[ftype] if ftype in self.ftypes else None
+        self.fname = fname
+        self.data = data
+
+    def send_mail(self, host="localhost"):
+
+        """Method:  send_mail
+
+        Description:  Send email.
+
+        Arguments:
+
+        """
+
+        self.host = host
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -214,31 +232,71 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args = ArgParser()
-        self.mail = MailTest("toaddr")
+        self.mail = Mail("toaddr")
+        self.mail2 = Mail2("subject", "toaddr")
 
         self.data = {"Status": "ok"}
         self.file = "test/unit/rmq_admin/tmp/data_out_file.txt"
-        self.args_array = {}
-        self.args_array2 = {"-z": True}
-        self.args_array3 = {"-w": True}
-        self.args_array4 = {"-w": True, "-z": True}
-        self.args_array5 = {"-o": self.file, "-z": True}
-        self.args_array6 = {"-o": self.file, "-w": True, "-z": True}
-        self.args_array7 = {"-o": self.file, "-a": True, "-z": True}
-        self.args_array8 = {"-o": self.file, "-a": True, "-w": True,
-                            "-z": True}
-        self.args_array9 = {"-t": "toaddr", "-z": True}
-        self.args_array10 = {"-t": "toaddr", "-w": True, "-z": True}
-        self.args_array11 = {"-t": "toaddr"}
-        self.args_array12 = {"-t": "toaddr", "-w": True}
-        self.args_array13 = {"-t": "toaddr", "-o": self.file, "-z": True}
-        self.args_array14 = {"-t": "toaddr", "-o": self.file, "-w": True,
-                             "-z": True}
-        self.args_array15 = {"-o": self.file}
-        self.args_array16 = {"-o": self.file, "-w": True}
-        self.args_array17 = {"-t": "toaddr", "-o": self.file}
-        self.args_array18 = {"-t": "toaddr", "-o": self.file, "-w": True}
+        base_data_config = {
+            "indent": None, "to_addr": None, "attach": None, "outfile": None,
+            "use_pprint": None, "suppress": None, "use_pprint": None}
+        self.data_config = dict(base_data_config)
+        self.data_config2 = dict(base_data_config)
+        self.data_config2["suppress"] = True
+        self.data_config3 = dict(base_data_config)
+        self.data_config3["report"] = True
+        self.data_config4 = dict(base_data_config)
+        self.data_config4["report"] = True
+        self.data_config4["suppress"] = True
+        self.data_config5 = dict(base_data_config)
+        self.data_config5["outfile"] = self.file
+        self.data_config5["suppress"] = True
+        self.data_config6 = dict(base_data_config)
+        self.data_config6["outfile"] = self.file
+        self.data_config6["report"] = True
+        self.data_config6["suppress"] = True
+        self.data_config7 = dict(base_data_config)
+        self.data_config7["outfile"] = self.file
+        self.data_config7["mode"] = "a"
+        self.data_config7["suppress"] = True
+        self.data_config8 = dict(base_data_config)
+        self.data_config8["outfile"] = self.file
+        self.data_config8["mode"] = "a"
+        self.data_config8["report"] = True
+        self.data_config8["suppress"] = True
+        self.data_config9 = dict(base_data_config)
+        self.data_config9["to_addr"] = "toaddr"
+        self.data_config9["suppress"] = True
+        self.data_config10 = dict(base_data_config)
+        self.data_config10["to_addr"] = "toaddr"
+        self.data_config10["report"] = True
+        self.data_config10["suppress"] = True
+        self.data_config11 = dict(base_data_config)
+        self.data_config11["to_addr"] = "toaddr"
+        self.data_config12 = dict(base_data_config)
+        self.data_config12["to_addr"] = "toaddr"
+        self.data_config12["report"] = True
+        self.data_config13 = dict(base_data_config)
+        self.data_config13["to_addr"] = "toaddr"
+        self.data_config13["outfile"] = self.file
+        self.data_config13["suppress"] = True
+        self.data_config14 = dict(base_data_config)
+        self.data_config14["to_addr"] = "toaddr"
+        self.data_config14["outfile"] = self.file
+        self.data_config14["report"] = True
+        self.data_config14["suppress"] = True
+        self.data_config15 = dict(base_data_config)
+        self.data_config15["outfile"] = self.file
+        self.data_config16 = dict(base_data_config)
+        self.data_config16["outfile"] = self.file
+        self.data_config16["report"] = True
+        self.data_config17 = dict(base_data_config)
+        self.data_config17["to_addr"] = "toaddr"
+        self.data_config17["outfile"] = self.file
+        self.data_config18 = dict(base_data_config)
+        self.data_config18["to_addr"] = "toaddr"
+        self.data_config18["outfile"] = self.file
+        self.data_config18["report"] = True
 
         self.results = '{"Status": "ok"}'
         self.results2 = ""
@@ -254,12 +312,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array18
-
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            rmq_admin.data_out(self.data, self.args)
+            rmq_admin.data_out(self.data, **self.data_config18)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -274,14 +330,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array18
-
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            rmq_admin.data_out(self.data, self.args)
+            rmq_admin.data_out(self.data, **self.data_config18)
 
-        self.assertEqual(linecnt(self.file), 3)
+        self.assertEqual(linecnt(self.file), 1)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_all2(self, mock_mail):
@@ -294,12 +348,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array17
-
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            rmq_admin.data_out(self.data, self.args)
+            rmq_admin.data_out(self.data, **self.data_config17)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -314,12 +366,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array17
-
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            rmq_admin.data_out(self.data, self.args)
+            rmq_admin.data_out(self.data, **self.data_config17)
 
         self.assertTrue(os.path.isfile(self.file))
 
@@ -333,12 +383,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array16
-
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.data_out(self.data, self.args))
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config16))
 
-        self.assertEqual(linecnt(self.file), 3)
+        self.assertEqual(linecnt(self.file), 1)
 
     def test_no_err_std_file2(self):
 
@@ -350,10 +399,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array15
-
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.data_out(self.data, self.args))
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config15))
 
     def test_no_err_std_file(self):
 
@@ -365,10 +413,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array15
-
         with gen_libs.no_std_out():
-            rmq_admin.data_out(self.data, self.args)
+            rmq_admin.data_out(self.data, **self.data_config15)
 
         self.assertTrue(os.path.isfile(self.file))
 
@@ -385,11 +431,9 @@ class UnitTest(unittest.TestCase):
 
         mock_mail.return_value = self.mail
 
-        self.args.args_array = self.args_array14
+        rmq_admin.data_out(self.data, **self.data_config14)
 
-        rmq_admin.data_out(self.data, self.args)
-
-        self.assertEqual(linecnt(self.file), 3)
+        self.assertEqual(linecnt(self.file), 1)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_verb_file_mail(self, mock_mail):
@@ -402,11 +446,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array14
-
         mock_mail.return_value = self.mail
 
-        rmq_admin.data_out(self.data, self.args)
+        rmq_admin.data_out(self.data, **self.data_config14)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -421,11 +463,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array13
-
         mock_mail.return_value = self.mail
 
-        rmq_admin.data_out(self.data, self.args)
+        rmq_admin.data_out(self.data, **self.data_config13)
 
         self.assertTrue(os.path.isfile(self.file))
 
@@ -440,11 +480,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array13
-
         mock_mail.return_value = self.mail
 
-        rmq_admin.data_out(self.data, self.args)
+        rmq_admin.data_out(self.data, **self.data_config13)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -459,12 +497,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array12
-
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.data_out(self.data, self.args))
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config12))
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_verb_std_mail(self, mock_mail):
@@ -477,12 +514,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array12
-
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            rmq_admin.data_out(self.data, self.args)
+            rmq_admin.data_out(self.data, **self.data_config12)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -497,12 +532,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array11
-
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            rmq_admin.data_out(self.data, self.args)
+            rmq_admin.data_out(self.data, **self.data_config11)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -517,12 +550,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array11
-
         mock_mail.return_value = self.mail
 
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.data_out(self.data, self.args))
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config11))
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_err_verb_mail(self, mock_mail):
@@ -535,11 +567,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array10
-
         mock_mail.return_value = self.mail
 
-        rmq_admin.data_out(self.data, self.args)
+        rmq_admin.data_out(self.data, **self.data_config10)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -554,11 +584,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array9
-
         mock_mail.return_value = self.mail
 
-        rmq_admin.data_out(self.data, self.args)
+        rmq_admin.data_out(self.data, **self.data_config9)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -573,11 +601,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array10
-
         mock_mail.return_value = self.mail
 
-        rmq_admin.data_out(self.data, self.args)
+        rmq_admin.data_out(self.data, **self.data_config10)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -592,11 +618,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array9
-
         mock_mail.return_value = self.mail
 
-        rmq_admin.data_out(self.data, self.args)
+        rmq_admin.data_out(self.data, **self.data_config9)
 
         self.assertEqual(self.mail.msg, self.results)
 
@@ -610,12 +634,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array8
+        rmq_admin.data_out(self.data, **self.data_config8)
+        rmq_admin.data_out(self.data, **self.data_config8)
 
-        rmq_admin.data_out(self.data, self.args)
-        rmq_admin.data_out(self.data, self.args)
-
-        self.assertEqual(linecnt(self.file), 6)
+        self.assertEqual(linecnt(self.file), 2)
 
     def test_append_file(self):
 
@@ -627,12 +649,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array7
+        rmq_admin.data_out(self.data, **self.data_config7)
+        rmq_admin.data_out(self.data, **self.data_config7)
 
-        rmq_admin.data_out(self.data, self.args)
-        rmq_admin.data_out(self.data, self.args)
-
-        self.assertEqual(linecnt(self.file), 6)
+        self.assertEqual(linecnt(self.file), 2)
 
     def test_err_verb_file(self):
 
@@ -644,11 +664,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array6
+        rmq_admin.data_out(self.data, **self.data_config6)
 
-        rmq_admin.data_out(self.data, self.args)
-
-        self.assertEqual(linecnt(self.file), 3)
+        self.assertEqual(linecnt(self.file), 1)
 
     def test_err_file(self):
 
@@ -660,11 +678,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array5
+        rmq_admin.data_out(self.data, **self.data_config5)
 
-        rmq_admin.data_out(self.data, self.args)
-
-        self.assertEqual(linecnt(self.file), 3)
+        self.assertEqual(linecnt(self.file), 1)
 
     def test_no_err_verb_file(self):
 
@@ -676,11 +692,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array6
+        rmq_admin.data_out(self.data, **self.data_config6)
 
-        rmq_admin.data_out(self.data, self.args)
-
-        self.assertEqual(linecnt(self.file), 3)
+        self.assertEqual(linecnt(self.file), 1)
 
     def test_no_err_file(self):
 
@@ -692,9 +706,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array5
-
-        rmq_admin.data_out(self.data, self.args)
+        rmq_admin.data_out(self.data, **self.data_config5)
 
         self.assertTrue(os.path.isfile(self.file))
 
@@ -708,9 +720,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array2
-
-        self.assertFalse(rmq_admin.data_out(self.data, self.args))
+        self.assertFalse(rmq_admin.data_out(self.data, **self.data_config2))
 
     def test_no_err_verb_suppr(self):
 
@@ -722,9 +732,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array4
-
-        self.assertFalse(rmq_admin.data_out(self.data, self.args))
+        self.assertFalse(rmq_admin.data_out(self.data, **self.data_config4))
 
     def test_errors_verbose(self):
 
@@ -736,10 +744,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array3
-
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.data_out(self.data, self.args))
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config3))
 
     def test_errors(self):
 
@@ -751,10 +758,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array
-
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.data_out(self.data, self.args))
+            self.assertFalse(rmq_admin.data_out(self.data, **self.data_config))
 
     def test_no_errors_verbose(self):
 
@@ -766,10 +771,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array3
-
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.data_out(self.data, self.args))
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config3))
 
     def test_no_errors(self):
 
@@ -781,10 +785,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array
-
         with gen_libs.no_std_out():
-            self.assertFalse(rmq_admin.data_out(self.data, self.args))
+            self.assertFalse(rmq_admin.data_out(self.data, **self.data_config))
 
     def tearDown(self):
 

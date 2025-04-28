@@ -535,7 +535,7 @@ def generic_call(data_config, dtg, rmq, **kwargs):
     results = create_header(dtg, rmq)
     results[kwargs.get("dkey")] = kwargs.get("method")()
     data_out(
-        data, dtg=dtg, def_subj=kwargs.get("subj", "RabbitMQAdmin"),
+        results, dtg=dtg, def_subj=kwargs.get("subj", "RabbitMQAdmin"),
         **data_config)
 
 
@@ -583,7 +583,7 @@ def run_program(args):
             "method": rmq.list_nodes, "def_subj": "List_Nodes",
             "func": generic_call, "dkey": "Nodes"},
         "-N": {
-            "method": node_health, "def_subj": "List_Nodes",
+            "method": node_health, "def_subj": "Node_Health",
             "func": node_health},
         "-O": {
             "method": rmq.overview, "def_subj": "Node_OverView",
@@ -636,7 +636,7 @@ def main():
     opt_con_req_list = {"-s": ["-t"]}
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]
-    opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y"]
+    opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y", "-a"]
 
     # Process argument list from command line
     args = gen_class.ArgParser(

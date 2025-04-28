@@ -22,6 +22,7 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import rmq_admin                                # pylint:disable=E0401,C0413
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
 import rabbit_lib.rabbitmq_class as rmqcls  # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
@@ -42,56 +43,6 @@ def linecnt(fname):
         data = sum(1 for _ in f_hldr)
 
     return data
-
-
-class ArgParser():
-
-    """Class:  ArgParser
-
-    Description:  Class stub holder for gen_class.ArgParser class.
-
-    Methods:
-        __init__
-        get_val
-        arg_exist
-
-    """
-
-    def __init__(self):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.args_array = {"-c": "rabbitmq", "-d": "config"}
-
-    def get_val(self, skey, def_val=None):
-
-        """Method:  get_val
-
-        Description:  Method stub holder for gen_class.ArgParser.get_val.
-
-        Arguments:
-
-        """
-
-        return self.args_array.get(skey, def_val)
-
-    def arg_exist(self, arg):
-
-        """Method:  arg_exist
-
-        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
-
-        Arguments:
-
-        """
-
-        return arg in self.args_array
 
 
 class CfgTest():                                        # pylint:disable=R0903
@@ -149,19 +100,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args = ArgParser()
+        self.dtg = gen_class.TimeFormat()
+        self.dtg.create_time()
         self.cfg = CfgTest()
         self.rmq = rmqcls.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
-
         self.data = {'status': 'ok'}
         self.data2 = {'status': 'failed', 'reason': 'reason for failure'}
-        self.args_array = {}
-        self.args_array2 = {"-z": True}
-        self.args_array3 = {"-w": True}
-        self.args_array4 = {"-w": True, "-z": True}
-
-        self.date = "2020-07-24"
-        self.time = "10:20:10"
+        self.data_config = {"report": False}
+        self.data_config2 = {"report": False, "suppress": True}
+        self.data_config3 = {"report": True}
+        self.data_config4 = {"report": True, "suppress": True}
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -175,11 +123,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array2
-
         mock_get.return_value = self.data2
 
-        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
+        self.assertFalse(
+            rmq_admin.node_health(self.data_config2, self.dtg, rmq=self.rmq))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -193,11 +140,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array4
-
         mock_get.return_value = self.data
 
-        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
+        self.assertFalse(
+            rmq_admin.node_health(self.data_config4, self.dtg, rmq=self.rmq))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -211,11 +157,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array3
-
         mock_get.return_value = self.data2
 
-        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
+        self.assertFalse(
+            rmq_admin.node_health(self.data_config3, self.dtg, rmq=self.rmq))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -229,11 +174,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array
-
         mock_get.return_value = self.data2
 
-        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
+        self.assertFalse(
+            rmq_admin.node_health(self.data_config, self.dtg, rmq=self.rmq))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
@@ -247,11 +191,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array3
-
         mock_get.return_value = self.data
 
-        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
+        self.assertFalse(
+            rmq_admin.node_health(self.data_config3, self.dtg, rmq=self.rmq))
 
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.get")
     def test_no_errors(self, mock_get):
@@ -264,11 +207,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = self.args_array
-
         mock_get.return_value = self.data
 
-        self.assertFalse(rmq_admin.node_health(self.args, rmq=self.rmq))
+        self.assertFalse(
+            rmq_admin.node_health(self.data_config, self.dtg, rmq=self.rmq))
 
 
 if __name__ == "__main__":
