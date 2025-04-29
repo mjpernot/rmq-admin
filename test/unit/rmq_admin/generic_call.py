@@ -22,35 +22,11 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import rmq_admin                                # pylint:disable=E0401,C0413
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
 import rabbit_lib.rabbitmq_class as rmqcls  # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
-
-
-class ArgParser():                                      # pylint:disable=R0903
-
-    """Class:  ArgParser
-
-    Description:  Class stub holder for gen_class.ArgParser class.
-
-    Methods:
-        __init__
-        get_val
-
-    """
-
-    def __init__(self):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.args_array = {"-c": "rabbitmq", "-d": "config"}
 
 
 class CfgTest():                                        # pylint:disable=R0903
@@ -104,7 +80,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args = ArgParser()
+        self.dtg = gen_class.TimeFormat()
+        self.dtg.create_time()
+        self.data_config = {"report": False}
         self.cfg = CfgTest()
         self.rmq = rmqcls.RabbitMQAdmin(self.cfg.user, self.cfg.japd)
         self.data = {}
@@ -125,8 +103,9 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(
             rmq_admin.generic_call(
-                self.args, rmq=self.rmq, method=self.rmq.list_nodes,
-                subj="Email_Subject_Line"))
+                self.data_config, self.dtg, rmq=self.rmq,
+                method=self.rmq.list_nodes, subj="Email_Subject_Line",
+                dkey="Nodes"))
 
     @mock.patch("rmq_admin.data_out", mock.Mock(return_value=True))
     @mock.patch("rmq_admin.rabbitmq_class.RabbitMQAdmin.list_nodes")
@@ -144,7 +123,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(
             rmq_admin.generic_call(
-                self.args, rmq=self.rmq, method=self.rmq.list_nodes))
+                self.data_config, self.dtg, rmq=self.rmq,
+                method=self.rmq.list_nodes, dkey="Nodes"))
 
 
 if __name__ == "__main__":

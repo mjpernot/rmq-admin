@@ -56,6 +56,7 @@ class ArgParser():
         __init__
         get_args_keys
         get_val
+        arg_exist
 
     """
 
@@ -94,6 +95,18 @@ class ArgParser():
         """
 
         return self.args_array.get(skey, def_val)
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return arg in self.args_array
 
 
 class CfgTest():                                        # pylint:disable=R0903
