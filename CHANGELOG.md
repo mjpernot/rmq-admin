@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.1.1] - 2025-04-25
+Breaking Change
+
+- Updated python-lib v4.0.1
+- Removed support for RabbitMQ v3.6/3.8/3.10
+- Updated to work with RabbitMQ v4.0.4
+
+### Added
+- create_filename: Creates a filename for the attachment to an email.
+- create_data_config: Create data out config parameters.
+- create_header: Create standard header for JSON object.
+
+### Changed
+- data_out: Refactored the function to allow for email attachments for long data results and added pretty print command.
+- generic_call: Added call to create_header for JSON object and add results of RabbitMQ call to the dictionary.
+- run_program: Added calls to create_data_config and gen_class.TimeFormat to handle data configuration parameters and datetime group formats.
+- node_health: Replaced creation of header with call to create_header and removed check to see if status is set to error status.
+- Documentation changes.
+
+
 ## [0.1.0] - 2025-03-04
 Alpha release
 
