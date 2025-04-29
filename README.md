@@ -59,15 +59,18 @@ python -m pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --tru
 Create RabbitMQ configuration file.
 
 Make the appropriate changes to the RabbitMQ environment.
-  * Change these entries in the rabbitmq.py file.
-  * The "user", "passwd", and "host" is connection to a RabbitMQ node.
+  * Make the appropriate changes to connect to a RabbitMQ node/cluster.
     - user = "USER"
     - japd = "PSWORD"
     - host = "HOSTNAME"
+    - host_list = ["HOSTNAME:PORT", "HOSTNAME2:PORT"]
+    - exchange_name = "EXCHANGE_NAME"
+    - to_line = None
+    - scheme = "https"
   * Only change these if you know what you are doing.
-  * Managment port is m_port and Listening port is q_port.
+  * Managment port is m_port and Listening port is port.
+    - port = 5672
     - m_port = 15672
-    - q_port = 5672
 
 ```
 cp config/rabbitmq.py.TEMPLATE config/rabbitmq.py

@@ -18,11 +18,10 @@
 import sys
 import os
 import unittest
-import mock
 
 # Local
 sys.path.append(os.getcwd())
-import rmq_admin                           # pylint:disable=E0401,C0413
+import rmq_admin                                # pylint:disable=E0401,C0413
 import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__

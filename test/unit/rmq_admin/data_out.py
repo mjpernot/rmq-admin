@@ -1,4 +1,4 @@
-# Classification (U)
+# Classification (U)                                    # pylint:disable=C0302
 
 """Program:  data_out.py
 
@@ -166,9 +166,9 @@ class Mail2():
         self.fname = fname
         self.data = data
 
-    def send_mail(self, host="localhost"):
+    def send_email(self, host="localhost"):
 
-        """Method:  send_mail
+        """Method:  send_email
 
         Description:  Send email.
 
@@ -187,30 +187,48 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_no_err_verb_all_2a
+        test_no_err_verb_all_2
         test_no_err_verb_all2
         test_no_err_verb_all
+        test_no_err_all_2a
+        test_no_err_all_2
         test_no_err_all2
         test_no_err_all
+        test_no_err_verb_std_file2
         test_no_err_verb_std_file
+        test_no_err_std_file2a
+        test_no_err_std_file2b
         test_no_err_std_file2
         test_no_err_std_file
+        test_no_err_verb_file_mail2_2a
+        test_no_err_verb_file_mail2_2
         test_no_err_verb_file_mail2
         test_no_err_verb_file_mail
+        test_no_err_file_mail2_2a
+        test_no_err_file_mail2_2
         test_no_err_file_mail2
         test_no_err_file_mail
+        test_no_err_verb_std_mail2_2
         test_no_err_verb_std_mail2
         test_no_err_verb_std_mail
+        test_no_err_std_mail2_2
         test_no_err_std_mail2
         test_no_err_std_mail
         test_err_verb_mail
         test_err_mail
         test_no_err_verb_mail
         test_no_err_mail
+        test_append_verb_file2
         test_append_verb_file
         test_append_file
+        test_err_verb_file2
         test_err_verb_file
+        test_err_file2
         test_err_file
+        test_no_err_verb_file2
         test_no_err_verb_file
+        test_no_err_file2
         test_no_err_file
         test_errors_suppr
         test_no_err_verb_suppr
@@ -239,7 +257,7 @@ class UnitTest(unittest.TestCase):
         self.file = "test/unit/rmq_admin/tmp/data_out_file.txt"
         base_data_config = {
             "indent": None, "to_addr": None, "attach": None, "outfile": None,
-            "use_pprint": None, "suppress": None, "use_pprint": None}
+            "use_pprint": None, "suppress": None}
         self.data_config = dict(base_data_config)
         self.data_config2 = dict(base_data_config)
         self.data_config2["suppress"] = True
@@ -251,19 +269,39 @@ class UnitTest(unittest.TestCase):
         self.data_config5 = dict(base_data_config)
         self.data_config5["outfile"] = self.file
         self.data_config5["suppress"] = True
+        self.data_config5a = dict(base_data_config)
+        self.data_config5a["outfile"] = self.file
+        self.data_config5a["use_pprint"] = True
+        self.data_config5a["suppress"] = True
         self.data_config6 = dict(base_data_config)
         self.data_config6["outfile"] = self.file
         self.data_config6["report"] = True
         self.data_config6["suppress"] = True
+        self.data_config6a = dict(base_data_config)
+        self.data_config6a["outfile"] = self.file
+        self.data_config6a["use_pprint"] = True
+        self.data_config6a["report"] = True
+        self.data_config6a["suppress"] = True
         self.data_config7 = dict(base_data_config)
         self.data_config7["outfile"] = self.file
         self.data_config7["mode"] = "a"
         self.data_config7["suppress"] = True
+        self.data_config7a = dict(base_data_config)
+        self.data_config7a["outfile"] = self.file
+        self.data_config7a["use_pprint"] = True
+        self.data_config7a["mode"] = "a"
+        self.data_config7a["suppress"] = True
         self.data_config8 = dict(base_data_config)
         self.data_config8["outfile"] = self.file
         self.data_config8["mode"] = "a"
         self.data_config8["report"] = True
         self.data_config8["suppress"] = True
+        self.data_config8a = dict(base_data_config)
+        self.data_config8a["outfile"] = self.file
+        self.data_config8a["use_pprint"] = True
+        self.data_config8a["mode"] = "a"
+        self.data_config8a["report"] = True
+        self.data_config8a["suppress"] = True
         self.data_config9 = dict(base_data_config)
         self.data_config9["to_addr"] = "toaddr"
         self.data_config9["suppress"] = True
@@ -273,30 +311,88 @@ class UnitTest(unittest.TestCase):
         self.data_config10["suppress"] = True
         self.data_config11 = dict(base_data_config)
         self.data_config11["to_addr"] = "toaddr"
+        self.data_config11a = dict(base_data_config)
+        self.data_config11a["to_addr"] = "toaddr"
+        self.data_config11a["attach"] = True
         self.data_config12 = dict(base_data_config)
         self.data_config12["to_addr"] = "toaddr"
         self.data_config12["report"] = True
+        self.data_config12a = dict(base_data_config)
+        self.data_config12a["to_addr"] = "toaddr"
+        self.data_config12a["report"] = True
+        self.data_config12a["attach"] = True
         self.data_config13 = dict(base_data_config)
         self.data_config13["to_addr"] = "toaddr"
         self.data_config13["outfile"] = self.file
         self.data_config13["suppress"] = True
+        self.data_config13a = dict(base_data_config)
+        self.data_config13a["to_addr"] = "toaddr"
+        self.data_config13a["attach"] = True
+        self.data_config13a["outfile"] = self.file
+        self.data_config13a["suppress"] = True
+        self.data_config13aa = dict(base_data_config)
+        self.data_config13aa["to_addr"] = "toaddr"
+        self.data_config13aa["attach"] = True
+        self.data_config13aa["outfile"] = self.file
+        self.data_config13aa["use_pprint"] = True
+        self.data_config13aa["suppress"] = True
         self.data_config14 = dict(base_data_config)
         self.data_config14["to_addr"] = "toaddr"
         self.data_config14["outfile"] = self.file
         self.data_config14["report"] = True
         self.data_config14["suppress"] = True
+        self.data_config14a = dict(base_data_config)
+        self.data_config14a["to_addr"] = "toaddr"
+        self.data_config14a["attach"] = True
+        self.data_config14a["outfile"] = self.file
+        self.data_config14a["report"] = True
+        self.data_config14a["suppress"] = True
+        self.data_config14aa = dict(base_data_config)
+        self.data_config14aa["to_addr"] = "toaddr"
+        self.data_config14aa["attach"] = True
+        self.data_config14aa["outfile"] = self.file
+        self.data_config14aa["use_pprint"] = True
+        self.data_config14aa["report"] = True
+        self.data_config14aa["suppress"] = True
         self.data_config15 = dict(base_data_config)
         self.data_config15["outfile"] = self.file
+        self.data_config15a = dict(base_data_config)
+        self.data_config15a["outfile"] = self.file
+        self.data_config15a["use_pprint"] = True
         self.data_config16 = dict(base_data_config)
         self.data_config16["outfile"] = self.file
         self.data_config16["report"] = True
+        self.data_config16a = dict(base_data_config)
+        self.data_config16a["outfile"] = self.file
+        self.data_config16a["use_pprint"] = True
+        self.data_config16a["report"] = True
         self.data_config17 = dict(base_data_config)
         self.data_config17["to_addr"] = "toaddr"
         self.data_config17["outfile"] = self.file
+        self.data_config17a = dict(base_data_config)
+        self.data_config17a["to_addr"] = "toaddr"
+        self.data_config17a["attach"] = True
+        self.data_config17a["outfile"] = self.file
+        self.data_config17aa = dict(base_data_config)
+        self.data_config17aa["to_addr"] = "toaddr"
+        self.data_config17aa["attach"] = True
+        self.data_config17aa["outfile"] = self.file
+        self.data_config17aa["use_pprint"] = True
         self.data_config18 = dict(base_data_config)
         self.data_config18["to_addr"] = "toaddr"
         self.data_config18["outfile"] = self.file
         self.data_config18["report"] = True
+        self.data_config18a = dict(base_data_config)
+        self.data_config18a["to_addr"] = "toaddr"
+        self.data_config18a["attach"] = True
+        self.data_config18a["outfile"] = self.file
+        self.data_config18a["report"] = True
+        self.data_config18aa = dict(base_data_config)
+        self.data_config18aa["to_addr"] = "toaddr"
+        self.data_config18aa["attach"] = True
+        self.data_config18aa["outfile"] = self.file
+        self.data_config18aa["report"] = True
+        self.data_config18aa["use_pprint"] = True
 
         self.results = '{"Status": "ok"}'
         self.results2 = ""
@@ -318,6 +414,46 @@ class UnitTest(unittest.TestCase):
             rmq_admin.data_out(self.data, **self.data_config18)
 
         self.assertEqual(self.mail.msg, self.results)
+
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_verb_all_2a(self, mock_mail):
+
+        """Function:  test_no_err_verb_all_2a
+
+        Description:  Test with no errors detected - all - pprint - verbose.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        with gen_libs.no_std_out():
+            rmq_admin.data_out(self.data, **self.data_config18aa)
+
+        self.assertEqual(linecnt(self.file), 1)
+
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_verb_all_2(self, mock_mail):
+
+        """Function:  test_no_err_verb_all_2
+
+        Description:  Test with no errors detected - all - verbose.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        with gen_libs.no_std_out():
+            rmq_admin.data_out(self.data, **self.data_config18a)
+
+        self.assertEqual(linecnt(self.file), 1)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_verb_all(self, mock_mail):
@@ -355,6 +491,46 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(self.mail.msg, self.results)
 
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_all_2a(self, mock_mail):
+
+        """Function:  test_no_err_all_2a
+
+        Description:  Test with no errors detected - all outputs - pprint.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        with gen_libs.no_std_out():
+            rmq_admin.data_out(self.data, **self.data_config17aa)
+
+        self.assertTrue(os.path.isfile(self.file))
+
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_all_2(self, mock_mail):
+
+        """Function:  test_no_err_all_2
+
+        Description:  Test with no errors detected - all outputs.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        with gen_libs.no_std_out():
+            rmq_admin.data_out(self.data, **self.data_config17a)
+
+        self.assertTrue(os.path.isfile(self.file))
+
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_all(self, mock_mail):
 
@@ -373,6 +549,22 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(os.path.isfile(self.file))
 
+    def test_no_err_verb_std_file2(self):
+
+        """Function:  test_no_err_verb_std_file2
+
+        Description:  Test no erro to std out & pprint file - verbose.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config16a))
+
+        self.assertEqual(linecnt(self.file), 1)
+
     def test_no_err_verb_std_file(self):
 
         """Function:  test_no_err_verb_std_file
@@ -389,9 +581,23 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(linecnt(self.file), 1)
 
-    def test_no_err_std_file2(self):
+    def test_no_err_std_file2a(self):
 
-        """Function:  test_no_err_std_file2
+        """Function:  test_no_err_std_file2a
+
+        Description:  Test with no errors to standard out and pprint file.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config15a))
+
+    def test_no_err_std_file2b(self):
+
+        """Function:  test_no_err_std_file2b
 
         Description:  Test with no errors to standard out and file.
 
@@ -402,6 +608,21 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(
                 rmq_admin.data_out(self.data, **self.data_config15))
+
+    def test_no_err_std_file2(self):
+
+        """Function:  test_no_err_std_file2
+
+        Description:  Test with no errors to standard out and pprint file.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            rmq_admin.data_out(self.data, **self.data_config15a)
+
+        self.assertTrue(os.path.isfile(self.file))
 
     def test_no_err_std_file(self):
 
@@ -417,6 +638,44 @@ class UnitTest(unittest.TestCase):
             rmq_admin.data_out(self.data, **self.data_config15)
 
         self.assertTrue(os.path.isfile(self.file))
+
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_verb_file_mail2_2a(self, mock_mail):
+
+        """Function:  test_no_err_verb_file_mail2_2a
+
+        Description:  Test with no errors - pprint file and mail2 - verbose.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        rmq_admin.data_out(self.data, **self.data_config14aa)
+
+        self.assertEqual(linecnt(self.file), 1)
+
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_verb_file_mail2_2(self, mock_mail):
+
+        """Function:  test_no_err_verb_file_mail2_2
+
+        Description:  Test with no errors detected - file and mail2 - verbose.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        rmq_admin.data_out(self.data, **self.data_config14a)
+
+        self.assertEqual(linecnt(self.file), 1)
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_verb_file_mail2(self, mock_mail):
@@ -452,6 +711,44 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(self.mail.msg, self.results)
 
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_file_mail2_2a(self, mock_mail):
+
+        """Function:  test_no_err_file_mail2_2a
+
+        Description:  Test with no errors detected - pprint file and mail2.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        rmq_admin.data_out(self.data, **self.data_config13aa)
+
+        self.assertTrue(os.path.isfile(self.file))
+
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_file_mail2_2(self, mock_mail):
+
+        """Function:  test_no_err_file_mail2_2
+
+        Description:  Test with no errors detected - file and mail2.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        rmq_admin.data_out(self.data, **self.data_config13a)
+
+        self.assertTrue(os.path.isfile(self.file))
+
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_file_mail2(self, mock_mail):
 
@@ -485,6 +782,25 @@ class UnitTest(unittest.TestCase):
         rmq_admin.data_out(self.data, **self.data_config13)
 
         self.assertEqual(self.mail.msg, self.results)
+
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_verb_std_mail2_2(self, mock_mail):
+
+        """Function:  test_no_err_verb_std_mail2_2
+
+        Description:  Test no erro to std out & mail2 - verbose.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config12a))
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_verb_std_mail2(self, mock_mail):
@@ -520,6 +836,25 @@ class UnitTest(unittest.TestCase):
             rmq_admin.data_out(self.data, **self.data_config12)
 
         self.assertEqual(self.mail.msg, self.results)
+
+    @mock.patch("rmq_admin.create_filename",
+                mock.Mock(return_value="Filename"))
+    @mock.patch("rmq_admin.gen_class.Mail2")
+    def test_no_err_std_mail_2(self, mock_mail):
+
+        """Function:  test_no_err_std_mail2_2
+
+        Description:  Test with no errors to standard out and mail2.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail2
+
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                rmq_admin.data_out(self.data, **self.data_config11a))
 
     @mock.patch("rmq_admin.gen_class.setup_mail")
     def test_no_err_std_mail2(self, mock_mail):
@@ -624,6 +959,21 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(self.mail.msg, self.results)
 
+    def test_append_verb_file2(self):
+
+        """Function:  test_append_verb_file2
+
+        Description:  Test with append pretty print file and verbose.
+
+        Arguments:
+
+        """
+
+        rmq_admin.data_out(self.data, **self.data_config8a)
+        rmq_admin.data_out(self.data, **self.data_config8a)
+
+        self.assertEqual(linecnt(self.file), 2)
+
     def test_append_verb_file(self):
 
         """Function:  test_append_verb_file
@@ -636,6 +986,21 @@ class UnitTest(unittest.TestCase):
 
         rmq_admin.data_out(self.data, **self.data_config8)
         rmq_admin.data_out(self.data, **self.data_config8)
+
+        self.assertEqual(linecnt(self.file), 2)
+
+    def test_append_file2(self):
+
+        """Function:  test_append_file2
+
+        Description:  Test with errors detected - pretty print append file.
+
+        Arguments:
+
+        """
+
+        rmq_admin.data_out(self.data, **self.data_config7a)
+        rmq_admin.data_out(self.data, **self.data_config7a)
 
         self.assertEqual(linecnt(self.file), 2)
 
@@ -654,6 +1019,20 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(linecnt(self.file), 2)
 
+    def test_err_verb_file2(self):
+
+        """Function:  test_err_verb_file2
+
+        Description:  Test with errors detected - pprint write file - verbose.
+
+        Arguments:
+
+        """
+
+        rmq_admin.data_out(self.data, **self.data_config6a)
+
+        self.assertEqual(linecnt(self.file), 1)
+
     def test_err_verb_file(self):
 
         """Function:  test_err_verb_file
@@ -665,6 +1044,20 @@ class UnitTest(unittest.TestCase):
         """
 
         rmq_admin.data_out(self.data, **self.data_config6)
+
+        self.assertEqual(linecnt(self.file), 1)
+
+    def test_err_file2(self):
+
+        """Function:  test_err_file2
+
+        Description:  Test with errors detected - pretty print write file.
+
+        Arguments:
+
+        """
+
+        rmq_admin.data_out(self.data, **self.data_config5a)
 
         self.assertEqual(linecnt(self.file), 1)
 
@@ -682,6 +1075,20 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(linecnt(self.file), 1)
 
+    def test_no_err_verb_file2(self):
+
+        """Function:  test_no_err_verb_file2
+
+        Description:  Test with no errors detected - pprint write file verbose.
+
+        Arguments:
+
+        """
+
+        rmq_admin.data_out(self.data, **self.data_config6a)
+
+        self.assertEqual(linecnt(self.file), 1)
+
     def test_no_err_verb_file(self):
 
         """Function:  test_no_err_verb_file
@@ -695,6 +1102,20 @@ class UnitTest(unittest.TestCase):
         rmq_admin.data_out(self.data, **self.data_config6)
 
         self.assertEqual(linecnt(self.file), 1)
+
+    def test_no_err_file2(self):
+
+        """Function:  test_no_err_file2
+
+        Description:  Test with no errors detected - pretty print write file.
+
+        Arguments:
+
+        """
+
+        rmq_admin.data_out(self.data, **self.data_config5a)
+
+        self.assertTrue(os.path.isfile(self.file))
 
     def test_no_err_file(self):
 

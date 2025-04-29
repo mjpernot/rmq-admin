@@ -446,7 +446,7 @@ def data_out(data, **kwargs):
             report -> True|False - Report even if no error was detected
             def_subj -> Default subject line for email if not provided
             attach -> True|False - Attach data to email as attachment
-            attach_file -> True|False - Name of file attachment
+            attach_file -> Name of file attachment
             add_host -> True|False - Add hostname to file attachment name
             add_dtg -> True|False - Add datetime to file attachment name
             add_micro -> True|False - Add microseconds to file attachment name
@@ -487,7 +487,7 @@ def data_out(data, **kwargs):
         print(data)
 
 
-def node_health(data_config, dtg, rmq, **kwargs):
+def node_health(data_config, dtg, rmq, **kwargs):       # pylint:disable=W0613
 
     """Function:  node_health
 

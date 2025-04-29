@@ -9,7 +9,7 @@ Breaking Change
 
 - Updated python-lib v4.0.1
 - Removed support for RabbitMQ v3.6/3.8/3.10
-- Updated to work with RabbitMQ v4.0
+- Updated to work with RabbitMQ v4.0.4
 
 ### Added
 - create_filename: Creates a filename for the attachment to an email.
