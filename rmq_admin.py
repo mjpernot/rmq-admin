@@ -34,6 +34,9 @@
              -Q [-t to_email [to_email2 ...] [-s subject_line]]
                 [-o dir_path/file [-a a|w]]] [-z] [-r [-k N]
                 [-r [-f FileName] [-n] [-g] [-m]]] |
+             -T [-t to_email [to_email2 ...] [-s subject_line]]
+                [-o dir_path/file [-a a|w]]] [-z] [-r [-k N]
+                [-r [-f FileName] [-n] [-g] [-m]]] |
              -U [-t to_email [to_email2 ...] [-s subject_line]]
                 [-o dir_path/file [-a a|w]]] [-z] [-r [-k N]
                 [-r [-f FileName] [-n] [-g] [-m]]] |
@@ -195,6 +198,24 @@
                 -k N => Indentation for expanded JSON format.
 
         -Q -> List queues
+            -t to_email_address(es) => Enables emailing and sends output to one
+                    or more email addresses.  Email addresses are delimited by
+                    a space.
+                -s subject_line => Subject line of email.  If none is provided
+                    then a default one will be used.
+                -e => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
+            -o dir_path/file => Directory path and file name for output.
+                -a a|w => Append or write to output to output file.
+                    Note: Default is write.
+            -z => Suppress standard out.
+            -r => Expand the JSON format.
+                -k N => Indentation for expanded JSON format.
+
+        -T -> Display message counts in each queue
             -t to_email_address(es) => Enables emailing and sends output to one
                     or more email addresses.  Email addresses are delimited by
                     a space.
@@ -487,6 +508,16 @@ def data_out(data, **kwargs):
         print(data)
 
 
+def queue_count(data_config, dtg, rmq, **kwargs):
+
+    results = create_header(dtg, rmq)
+    # Call function to return a list of queues in the RabbitMQ cluster
+    # Loop on the list of queues and pull out each the queue names:
+    #   rmq = RabbitMQPub
+    #   Connect to queue
+    #   Call queue_count
+    #   Save queue name and count
+    
 def node_health(data_config, dtg, rmq, **kwargs):       # pylint:disable=W0613
 
     """Function:  node_health
@@ -591,6 +622,9 @@ def run_program(args):
         "-P": {
             "method": rmq.list_permissions, "def_subj": "List_Permissions",
             "func": generic_call, "dkey": "Permissions"},
+        "-T": {
+            "method": queue_count, "def_subj": "Queue_Count",
+            "func": queue_count},
         "-Q": {
             "method": rmq.list_queues, "def_subj": "List_Queues",
             "func": generic_call, "dkey": "Queues"},

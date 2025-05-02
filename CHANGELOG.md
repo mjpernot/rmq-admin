@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [0.1.2] - 2025-05-02
+- Added option (-T) to view queue message counts.
+- Added ability to set threshold queue message count.
+- Updated rabbitmq-lib v2.4.0
+
+### Changed
+- run_program: Added -T option func_dict dictionary.
+- Documentation changes.
+
+
 ## [0.1.1] - 2025-04-25
 Breaking Change
 
