@@ -34,6 +34,9 @@
              -Q [-t to_email [to_email2 ...] [-s subject_line]]
                 [-o dir_path/file [-a a|w]]] [-z] [-r [-k N]
                 [-r [-f FileName] [-n] [-g] [-m]]] |
+             -T [-t to_email [to_email2 ...] [-s subject_line]]
+                [-o dir_path/file [-a a|w]]] [-z] [-r [-k N]
+                [-r [-f FileName] [-n] [-g] [-m]]] [-j [-x] [-u]] |
              -U [-t to_email [to_email2 ...] [-s subject_line]]
                 [-o dir_path/file [-a a|w]]] [-z] [-r [-k N]
                 [-r [-f FileName] [-n] [-g] [-m]]] |
@@ -195,6 +198,28 @@
                 -k N => Indentation for expanded JSON format.
 
         -Q -> List queues
+            -t to_email_address(es) => Enables emailing and sends output to one
+                    or more email addresses.  Email addresses are delimited by
+                    a space.
+                -s subject_line => Subject line of email.  If none is provided
+                    then a default one will be used.
+                -e => Attach data to email as attachment.
+                    -f {file_name} => Name of file attachment.
+                    -n => Add hostname to file attachment name.
+                    -g => Add datetime to file attachment name.
+                    -m => Add microseconds to file attachment name.
+            -o dir_path/file => Directory path and file name for output.
+                -a a|w => Append or write to output to output file.
+                    Note: Default is write.
+            -z => Suppress standard out.
+            -r => Expand the JSON format.
+                -k N => Indentation for expanded JSON format.
+
+        -T -> Display message counts in each queue
+            -j => Count threshold.  Set up check on queue count.
+                -x N => Set threshold.  Report only those queues that are above
+                    the threshold.  Default is 1.
+                -u => Do not display report if no queues meet the threshold.
             -t to_email_address(es) => Enables emailing and sends output to one
                     or more email addresses.  Email addresses are delimited by
                     a space.
@@ -401,6 +426,9 @@ def create_data_config(args):
     data_config["add_host"] = args.arg_exist("-n")
     data_config["add_dtg"] = args.arg_exist("-g")
     data_config["add_micro"] = args.arg_exist("-m")
+    data_config["threshold"] = args.arg_exist("-j")
+    data_config["threshold_cnt"] = int(args.get_val("-x", def_val=1))
+    data_config["threshold_rpt"] = args.arg_exist("-u")
 
     return data_config
 
@@ -485,6 +513,50 @@ def data_out(data, **kwargs):
 
     elif not kwargs.get("suppress", False):
         print(data)
+
+
+def queue_count(data_config, dtg, rmq, **kwargs):
+
+    """Function:  queue_count
+
+    Description:  RabbitMQ Queue count.
+
+    Arguments:
+        (input) data_config -> Dictionary of data configuration options
+        (input) dtg -> TimeFormat instance
+        (input) rmq -> RabbitMQAdmin class instance
+        (input) kwargs:
+            method -> Name of RabbitMQAdmin class method
+            subj -> Subject line for email
+            func -> Name of function
+
+    """
+
+    results = create_header(dtg, rmq)
+    results["Queues"] = []
+    threshold = data_config["threshold"]
+    threshold_cnt = data_config["threshold_cnt"]
+    threshold_rpt = data_config["threshold_rpt"]
+    rmq2 = rabbitmq_class.RabbitMQPub(rmq.name, rmq.auth[1])
+    rmq2.connect()
+
+    for queue in rmq.list_queues():
+        rmq2.queue_name = queue["name"]
+        rmq2.open_channel()
+        rmq2.connect_queue()
+        cnt = rmq2.queue_count()
+
+        if (threshold and cnt >= threshold_cnt) or not threshold:
+            results["Queues"].append({"name": queue["name"], "count": cnt})
+
+        rmq2.close_channel()
+
+    rmq2.close()
+
+    if (threshold_rpt and results["Queues"]) or not threshold_rpt:
+        data_out(
+            results, dtg=dtg,
+            def_subj=kwargs.get("subj", "RabbitMQQueueCount"), **data_config)
 
 
 def node_health(data_config, dtg, rmq, **kwargs):       # pylint:disable=W0613
@@ -591,6 +663,9 @@ def run_program(args):
         "-P": {
             "method": rmq.list_permissions, "def_subj": "List_Permissions",
             "func": generic_call, "dkey": "Permissions"},
+        "-T": {
+            "method": queue_count, "def_subj": "Queue_Count",
+            "func": queue_count},
         "-Q": {
             "method": rmq.list_queues, "def_subj": "List_Queues",
             "func": generic_call, "dkey": "Queues"},
@@ -636,7 +711,7 @@ def main():
     opt_con_req_list = {"-s": ["-t"]}
     opt_multi_list = ["-s", "-t"]
     opt_req_list = ["-c", "-d"]
-    opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y", "-a"]
+    opt_val_list = ["-c", "-d", "-o", "-t", "-s", "-y", "-a", "-x"]
 
     # Process argument list from command line
     args = gen_class.ArgParser(

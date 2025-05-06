@@ -16,6 +16,7 @@ coverage run -a --source=rmq_admin test/unit/rmq_admin/generic_call.py
 coverage run -a --source=rmq_admin test/unit/rmq_admin/help_message.py 
 coverage run -a --source=rmq_admin test/unit/rmq_admin/main.py
 coverage run -a --source=rmq_admin test/unit/rmq_admin/node_health.py
+coverage run -a --source=rmq_admin test/unit/rmq_admin/queue_count.py
 coverage run -a --source=rmq_admin test/unit/rmq_admin/run_program.py
 
 echo ""

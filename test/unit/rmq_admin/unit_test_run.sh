@@ -14,5 +14,6 @@ echo "Unit test:  rmq_admin.py"
 /usr/bin/python test/unit/rmq_admin/help_message.py
 /usr/bin/python test/unit/rmq_admin/main.py
 /usr/bin/python test/unit/rmq_admin/node_health.py
+/usr/bin/python test/unit/rmq_admin/queue_count.py
 /usr/bin/python test/unit/rmq_admin/run_program.py
 

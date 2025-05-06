@@ -19,6 +19,10 @@
 
 # Features:
  * RabbitMQ Node health check.
+ * RabbitMQ Queue message count.
+ * Check for threshold on queue message count.
+ * Display variable aspects of the RabbitMQ process: List channels, connections, users, exchanges, consumers, nodes, permissions, queues, vhosts
+ * Display overview health of the RabbitMQ node
 
 
 # Prerequisites:
