@@ -541,7 +541,6 @@ def queue_count(data_config, dtg, rmq, **kwargs):
     rmq2.connect()
 
     for queue in rmq.list_queues():
-        data = {}
         rmq2.queue_name = queue["name"]
         rmq2.open_channel()
         rmq2.connect_queue()
@@ -559,7 +558,7 @@ def queue_count(data_config, dtg, rmq, **kwargs):
             results, dtg=dtg,
             def_subj=kwargs.get("subj", "RabbitMQQueueCount"), **data_config)
 
-    
+
 def node_health(data_config, dtg, rmq, **kwargs):       # pylint:disable=W0613
 
     """Function:  node_health

@@ -30,31 +30,110 @@ __version__ = version.__version__
 
 
 class RabbitMQPub():
+
+    """Class:  RabbitMQPub
+
+    Description:  Class which is a representation of a RabbitMQPub class.
+
+    Methods:
+        __init__
+        connect
+        open_channel
+        connect_queue
+        queue_count
+        close_channel
+        close
+
+    """
+
     def __init__(self, user, jpad):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the RabbitMQPub class.
+
+        Arguments:
+
+        """
+
         self.user = user
         self.japd = jpad
         self.queue_name = None
         self.count = 4
 
     def connect(self):
+
+        """Method:  connect
+
+        Description:  Stub holder for the RabbitMQPub.connect method.
+
+        Arguments:
+
+        """
+
         return True
 
     def open_channel(self):
+
+        """Method:  open_channel
+
+        Description:  Stub holder for the RabbitMQPub.open_channel method.
+
+        Arguments:
+
+        """
+
         return True
 
     def connect_queue(self):
+
+        """Method:  connect_queue
+
+        Description:  Stub holder for the RabbitMQPub.connect_queue method.
+
+        Arguments:
+
+        """
+
         return True
 
     def queue_count(self):
+
+        """Method:  queue_count
+
+        Description:  Stub holder for the RabbitMQPub.queue_count method.
+
+        Arguments:
+
+        """
+
         return self.count
 
     def close_channel(self):
+
+        """Method:  close_channel
+
+        Description:  Stub holder for the RabbitMQPub.close_channel method.
+
+        Arguments:
+
+        """
+
         return True
 
     def close(self):
+
+        """Method:  close
+
+        Description:  Stub holder for the RabbitMQPub.close method.
+
+        Arguments:
+
+        """
+
         return True
 
-        
+
 class CfgTest():                                        # pylint:disable=R0903
 
     """Class:  CfgTest
