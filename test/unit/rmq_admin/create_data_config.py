@@ -87,6 +87,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_threshold_arg_def
+        test_threshold_arg
         test_mode_with_arg
         test_pprint_with_no_arg
         test_subj_with_no_arg
@@ -106,11 +108,42 @@ class UnitTest(unittest.TestCase):
 
         self.args = ArgParser()
         self.args.args_array["-m"] = "mongo"
+        self.args.args_array["-x"] = 5
         self.args2 = ArgParser()
         self.results = None
         self.results2 = "to_addr"
         self.results3 = False
         self.results4 = "a"
+        self.results5 = 5
+        self.results6 = 1
+
+    def test_threshold_arg_def(self):
+
+        """Function:  test_threshold_arg_def
+
+        Description:  Test with threshold with default setting.
+
+        Arguments:
+
+        """
+
+        self.assertEqual(
+            rmq_admin.create_data_config(self.args2)["threshold_cnt"],
+            self.results6)
+
+    def test_threshold_arg(self):
+
+        """Function:  test_threshold_arg
+
+        Description:  Test with threshold with argument passed.
+
+        Arguments:
+
+        """
+
+        self.assertEqual(
+            rmq_admin.create_data_config(self.args)["threshold_cnt"],
+            self.results5)
 
     def test_mode_with_arg(self):
 

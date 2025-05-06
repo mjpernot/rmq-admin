@@ -6,10 +6,17 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [0.1.2] - 2025-05-02
 - Added option (-T) to view queue message counts.
-- Added ability to set threshold queue message count.
+- Added ability to check threshold queue message count (-j) option.
+- Added ability to set threshold queue count (-x) option.
+- Added ability to not report threshold queue if no queues meet threshold (-u) option.
 - Updated rabbitmq-lib v2.4.0
 
+### Added
+- queue_count: RabbitMQ Queue count
+
 ### Changed
+- main: Added "-x" to opt_val_list.
+- create_data_config: Added "threshold" (-j), "threshold_cnt" (-x) and "threshold_rpt" (-u) options.
 - run_program: Added -T option func_dict dictionary.
 - Documentation changes.
 
