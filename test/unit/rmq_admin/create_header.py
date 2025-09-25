@@ -38,7 +38,7 @@ class RabbitMQAdmin():                                  # pylint:disable=R0903
 
     """
 
-    def __init__(                                       # pylint:disable=R0913
+    def __init__(                               # pylint:disable=R0913,R0917
             self, user, japd, host="localhost", port=15672, scheme="https"):
 
         """Method:  __init__
